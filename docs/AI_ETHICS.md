@@ -98,4 +98,4 @@ For cloud-based (Fireworks AI):
 ## Contact
 
 For questions about AI ethics or data privacy in LCC, please open an issue
-or contact the maintainers via [GitHub Issues](https://github.com/apundhir/license-compliance-checker/issues).
+or contact the maintainers via [GitHub Issues](https://github.com/aiexponent/license-compliance-checker/issues).

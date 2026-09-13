@@ -49,7 +49,7 @@ pip install license-compliance-checker
 Or run the full stack with Docker:
 
 ```bash
-git clone https://github.com/apundhir/license-compliance-checker.git
+git clone https://github.com/aiexponent/license-compliance-checker.git
 cd license-compliance-checker
 docker-compose up -d
 ```
@@ -104,4 +104,4 @@ lcc scan /path/to/your/project --policy my-policy.yml
 
 ## License
 
-LCC is licensed under the [Apache 2.0 License](https://github.com/apundhir/license-compliance-checker/blob/main/LICENSE).
+LCC is licensed under the [Apache 2.0 License](https://github.com/aiexponent/license-compliance-checker/blob/main/LICENSE).

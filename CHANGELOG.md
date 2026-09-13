@@ -17,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.1] - 2026-09-13
+
+### Changed
+- Project URLs now point at the `aiexponent` GitHub organisation after the rename
+  from `aiexponenthq`. This covers the packaging metadata shown on PyPI, the docs
+  site repository link, and the GitHub Action reference in the README.
+
+---
+
 ## [2.0.0] - 2026-07-19
 
 ### Breaking changes

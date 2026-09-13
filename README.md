@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://pypi.org/project/license-compliance-checker/"><img src="https://img.shields.io/pypi/v/license-compliance-checker.svg" alt="PyPI"></a>
-  <a href="https://github.com/aiexponenthq/license-compliance-checker/actions"><img src="https://github.com/aiexponenthq/license-compliance-checker/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/aiexponent/license-compliance-checker/actions"><img src="https://github.com/aiexponent/license-compliance-checker/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-0D5463.svg" alt="License: Apache 2.0"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-0D5463.svg" alt="Python 3.11+"></a>
   <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689"><img src="https://img.shields.io/badge/EU%20AI%20Act-Article%2053-0D5463.svg" alt="EU AI Act Article 53"></a>
@@ -197,7 +197,7 @@ lcc scan . --policy my-policy.yaml
 ```yaml
 # .github/workflows/license-check.yml
 - name: License compliance scan
-  uses: aiexponenthq/license-compliance-checker/.github/actions/license-compliance@v1
+  uses: aiexponent/license-compliance-checker/.github/actions/license-compliance@v1
   with:
     path: .
     policy: eu-ai-act-compliance
@@ -238,7 +238,7 @@ lcc sbom sign sbom.cdx.json --key ~/.gnupg/key.gpg
 See [CONTRIBUTING.md](CONTRIBUTING.md). Issues and PRs welcome.
 
 ```bash
-git clone https://github.com/aiexponenthq/license-compliance-checker
+git clone https://github.com/aiexponent/license-compliance-checker
 cd license-compliance-checker
 pip install -e ".[dev]"
 pytest
@@ -256,5 +256,5 @@ Built by [AI Exponent LLC](https://aiexponent.com) — `hello@aiexponent.com`
 
 *Part of the AiExponent open-source AI governance toolchain:
 **license-compliance-checker** ·
-[rag-benchmarking](https://github.com/aiexponenthq/rag-benchmarking) ·
-[RiskForge](https://github.com/aiexponenthq/riskforge)*
+[rag-benchmarking](https://github.com/aiexponent/rag-benchmarking) ·
+[RiskForge](https://github.com/aiexponent/riskforge)*

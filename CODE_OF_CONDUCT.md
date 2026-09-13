@@ -44,7 +44,7 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainers via **[GitHub Issues](https://github.com/apundhir/license-compliance-checker/issues)**.
+reported to the project maintainers via **[GitHub Issues](https://github.com/aiexponent/license-compliance-checker/issues)**.
 All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution
