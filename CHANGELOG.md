@@ -385,9 +385,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to LC
 
 - **Homepage**: https://lcc.dev
 - **Documentation**: https://docs.lcc.dev
-- **GitHub**: https://github.com/aiexponenthq/license-compliance-checker
-- **Issue Tracker**: https://github.com/aiexponenthq/license-compliance-checker/issues
-- **Discussions**: https://github.com/aiexponenthq/license-compliance-checker/discussions
+- **GitHub**: https://github.com/aiexponent/license-compliance-checker
+- **Issue Tracker**: https://github.com/aiexponent/license-compliance-checker/issues
+- **Discussions**: https://github.com/aiexponent/license-compliance-checker/discussions
 - **Docker Hub**: https://hub.docker.com/r/lcc/lcc
 - **PyPI**: https://pypi.org/project/license-compliance-checker/
 
