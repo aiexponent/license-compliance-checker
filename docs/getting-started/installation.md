@@ -21,7 +21,7 @@ The Docker method gives you the full stack — API server, background workers, w
 
 ```bash
 # Clone the repository
-git clone https://github.com/apundhir/license-compliance-checker.git
+git clone https://github.com/aiexponent/license-compliance-checker.git
 cd license-compliance-checker
 
 # Start all services
@@ -59,7 +59,7 @@ pip install license-compliance-checker
 Or install from a cloned repository:
 
 ```bash
-git clone https://github.com/apundhir/license-compliance-checker.git
+git clone https://github.com/aiexponent/license-compliance-checker.git
 cd license-compliance-checker
 pip install -e .
 ```
@@ -79,7 +79,7 @@ For contributors or anyone who wants to run the latest code:
 
 ```bash
 # Clone the repository
-git clone https://github.com/apundhir/license-compliance-checker.git
+git clone https://github.com/aiexponent/license-compliance-checker.git
 cd license-compliance-checker
 
 # Install with development dependencies

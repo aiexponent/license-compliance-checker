@@ -8,7 +8,7 @@
 # Prerequisites (one-time setup on PyPI):
 #   1. Go to https://pypi.org/manage/project/license-compliance-checker/settings/publishing/
 #   2. Add a "Trusted Publisher" with:
-#        - Owner:      apundhir
+#        - Owner:      aiexponent
 #        - Repository: license-compliance-checker
 #        - Workflow:    publish-pypi.yml
 #        - Environment: pypi

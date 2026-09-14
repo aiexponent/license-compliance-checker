@@ -10,7 +10,7 @@
 # Prerequisites (one-time setup on TestPyPI):
 #   1. Go to https://test.pypi.org/manage/project/license-compliance-checker/settings/publishing/
 #   2. Add a "Trusted Publisher" with:
-#        - Owner:      apundhir
+#        - Owner:      aiexponent
 #        - Repository: license-compliance-checker
 #        - Workflow:    test-pypi.yml
 #        - Environment: testpypi

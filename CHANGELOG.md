@@ -17,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.1] - 2026-09-13
+
+### Changed
+- Project URLs now point at the `aiexponent` GitHub organisation after the rename
+  from `aiexponenthq`. This covers the packaging metadata shown on PyPI, the docs
+  site repository link, and the GitHub Action reference in the README.
+
+---
+
 ## [2.0.0] - 2026-07-19
 
 ### Breaking changes
@@ -376,9 +385,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to LC
 
 - **Homepage**: https://lcc.dev
 - **Documentation**: https://docs.lcc.dev
-- **GitHub**: https://github.com/aiexponenthq/license-compliance-checker
-- **Issue Tracker**: https://github.com/aiexponenthq/license-compliance-checker/issues
-- **Discussions**: https://github.com/aiexponenthq/license-compliance-checker/discussions
+- **GitHub**: https://github.com/aiexponent/license-compliance-checker
+- **Issue Tracker**: https://github.com/aiexponent/license-compliance-checker/issues
+- **Discussions**: https://github.com/aiexponent/license-compliance-checker/discussions
 - **Docker Hub**: https://hub.docker.com/r/lcc/lcc
 - **PyPI**: https://pypi.org/project/license-compliance-checker/
 
