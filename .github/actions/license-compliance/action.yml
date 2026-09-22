@@ -110,7 +110,6 @@ runs:
 
         # Run the scan -- allow non-zero exit (violations return code 2)
         set +e
-        set -f
         lcc scan "${{ inputs.path }}" \
           --format "${{ inputs.format }}" \
           --output "${{ inputs.output }}" \
@@ -119,7 +118,6 @@ runs:
           $EXCLUDE_FLAGS \
           $MANIFEST_FLAGS
         SCAN_EXIT=$?
-        set +f
         set -e
 
         echo "report=${{ inputs.output }}" >> "$GITHUB_OUTPUT"
