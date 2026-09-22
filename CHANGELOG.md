@@ -17,12 +17,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [2.0.1] - 2026-09-13
+## [2.0.1] - 2026-09-22
+
+### Added
+- Expanded CI test matrix to include Python 3.13 (`["3.11", "3.12", "3.13"]`).
+- Surfaced and directly linked the live Material for MkDocs documentation portal at `https://aiexponent.github.io/license-compliance-checker/` across `README.md` and PyPI packaging metadata.
+- Added comprehensive 8-format Supported Export Formats reference matrix in `README.md`.
 
 ### Changed
-- Project URLs now point at the `aiexponent` GitHub organisation after the rename
-  from `aiexponenthq`. This covers the packaging metadata shown on PyPI, the docs
-  site repository link, and the GitHub Action reference in the README.
+- Hard-gated type checking in CI by removing `continue-on-error: true` from the `mypy` step.
+- Normalized all GitHub Action versions across CI, scan, docs, and publish workflows to official LTS tags (`actions/checkout@v4`, `actions/setup-python@v5`, `actions/setup-node@v4`, `actions/upload-artifact@v4`, `actions/download-artifact@v4`).
+- Updated project and repository URLs to point to the `aiexponent` GitHub organization (`https://github.com/aiexponent/license-compliance-checker`).
+- Clarified in `README.md` and FAQ that SARIF export is not supported, preventing phantom capability claims for security pipelines.
+- Hardened the Kubernetes deployment example secret (`examples/k8s/secret.yaml`) to be clearly marked as template-only.
+
+### Fixed
+- Resolved 142 typing errors across 36 files in `src/lcc/`, bringing mypy errors down to 0 across all 99 source files.
+- Fixed a latent runtime bug in `policy/testing.py` where generators were incorrectly chained using bitwise OR (`|`).
+- Fixed missing `Job` import in CLI background queue worker processing (`src/lcc/cli/main.py`).
+- Fixed SPDX document serialization in `src/lcc/sbom/spdx.py` by utilizing `write_document_to_stream` with an in-memory buffer.
+- Fixed filesystem license detection in `src/lcc/resolution/filesystem.py` to identify the primary license expression rather than matching the first arbitrary keyword.
+- Fixed the publish workflow test step to install all required test extras (`.[all,test]`).
 
 ---
 
@@ -383,12 +398,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to LC
 
 ## Links
 
-- **Homepage**: https://lcc.dev
-- **Documentation**: https://docs.lcc.dev
+- **Homepage**: https://github.com/aiexponent/license-compliance-checker
+- **Documentation**: https://aiexponent.github.io/license-compliance-checker/
 - **GitHub**: https://github.com/aiexponent/license-compliance-checker
 - **Issue Tracker**: https://github.com/aiexponent/license-compliance-checker/issues
 - **Discussions**: https://github.com/aiexponent/license-compliance-checker/discussions
-- **Docker Hub**: https://hub.docker.com/r/lcc/lcc
 - **PyPI**: https://pypi.org/project/license-compliance-checker/
 
 ---
