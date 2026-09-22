@@ -101,11 +101,11 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/aiexponenthq/license-compliance-checker"
-Repository = "https://github.com/aiexponenthq/license-compliance-checker"
-Documentation = "https://github.com/aiexponenthq/license-compliance-checker#readme"
-"Bug Tracker" = "https://github.com/aiexponenthq/license-compliance-checker/issues"
-Changelog = "https://github.com/aiexponenthq/license-compliance-checker/releases"
+Homepage = "https://github.com/aiexponent/license-compliance-checker"
+Repository = "https://github.com/aiexponent/license-compliance-checker"
+Documentation = "https://github.com/aiexponent/license-compliance-checker#readme"
+"Bug Tracker" = "https://github.com/aiexponent/license-compliance-checker/issues"
+Changelog = "https://github.com/aiexponent/license-compliance-checker/releases"
 
 [project.scripts]
 lcc = "lcc.cli.main:main"

@@ -52,7 +52,11 @@ Yes, LCC is completely free and open source (Apache-2.0 license). There are no p
 
 ### Who maintains LCC?
 
-LCC is maintained by [your organization/team]. We welcome community contributions!
+LCC is maintained by [AI Exponent LLC](https://aiexponent.com). We welcome community contributions!
+
+### Does LCC support SARIF export?
+
+No. LCC generates Software Composition Analysis (SCA) data, Software Bill of Materials (CycloneDX v1.5 and SPDX v2.3), and EU AI Act Article 53 compliance packs. LCC does **not** output SARIF (Static Analysis Results Interchange Format), which is designed for static source code defect / flaw reporting. If you are looking for SARIF-based EU AI Act compliance screening, see [LitmusAI](https://github.com/aiexponent/litmusai) (Article 5 Prohibited AI Practices Screener).
 
 ### How is LCC different from other tools?
 
