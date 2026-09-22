@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from cyclonedx.model import (
     ExternalReference,
@@ -241,7 +242,7 @@ class CycloneDXGenerator:
         if not comp_result or not comp_result.licenses:
             return None
 
-        licenses = []
+        licenses: list[Any] = []
 
         for lic_evidence in comp_result.licenses:
             # Check if this looks like a SPDX expression (contains OR, AND, WITH)
@@ -249,20 +250,17 @@ class CycloneDXGenerator:
             if any(keyword in license_str for keyword in [' OR ', ' AND ', ' WITH ']):
                 # Use LicenseExpression for SPDX expressions
                 try:
-                    license_obj = LicenseExpression(value=license_str)
-                    licenses.append(license_obj)
+                    licenses.append(LicenseExpression(value=license_str))
                 except Exception:
                     # If parsing fails, fall back to DisjunctiveLicense
-                    license_obj = DisjunctiveLicense(name=license_str)
-                    licenses.append(license_obj)
+                    licenses.append(DisjunctiveLicense(name=license_str))
             else:
                 # Use DisjunctiveLicense for simple license identifiers
                 # Check if it's an SPDX ID (use 'id') or a name (use 'name')
                 if license_str and not license_str.startswith("LicenseRef-"):
-                    license_obj = DisjunctiveLicense(id=license_str)
+                    licenses.append(DisjunctiveLicense(id=license_str))
                 else:
-                    license_obj = DisjunctiveLicense(name=license_str)
-                licenses.append(license_obj)
+                    licenses.append(DisjunctiveLicense(name=license_str))
 
         return licenses if licenses else None
 

@@ -223,6 +223,12 @@ async def get_current_user(
     """
     token = credentials.credentials
     token_data = decode_token(token)
+    if not token_data.username:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     # In a real implementation, fetch user from database
     # For now, return user from token data

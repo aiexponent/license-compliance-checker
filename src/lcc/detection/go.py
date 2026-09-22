@@ -79,7 +79,7 @@ class GoDetector(Detector):
             for module_dir in self._parse_go_work(go_work_path):
                 nested_mod = project_root / module_dir / "go.mod"
                 if nested_mod.exists():
-                    for name, version, metadata in self._parse_go_mod(nested_mod, module_dir):
+                    for name, version, metadata in self._parse_go_mod(nested_mod, str(module_dir)):
                         register(name, version, metadata)
 
         # Assign dependency depth metadata to all components
@@ -204,10 +204,10 @@ class GoDetector(Detector):
                     results.append((module, version, metadata))
                     current_index = len(results) - 1
             elif current_index is not None and line.strip().startswith("## explicit"):
-                module, version, metadata = results[current_index]
-                metadata = dict(metadata)
-                metadata["explicit"] = True
-                results[current_index] = (module, version, metadata)
+                mod_name, mod_ver, mod_meta = results[current_index]
+                mod_meta = dict(mod_meta)
+                mod_meta["explicit"] = True
+                results[current_index] = (mod_name, mod_ver, mod_meta)
         return results
 
     def _parse_go_work(self, path: Path) -> Iterable[Path]:

@@ -20,6 +20,7 @@ import json
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 
 class ScanRepository:
@@ -113,7 +114,7 @@ class ScanRepository:
             )
         return results
 
-    def get_scan(self, scan_id: str) -> dict[str, object] | None:
+    def get_scan(self, scan_id: str) -> dict[str, Any] | None:
         with self._connect() as conn:
             row = conn.execute(
                 """

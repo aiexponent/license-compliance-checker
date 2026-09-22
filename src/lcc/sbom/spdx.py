@@ -464,9 +464,13 @@ class SPDXGenerator:
         Returns:
             JSON string
         """
-        from spdx_tools.spdx.writer.json.json_writer import write_document_to_string
+        import io
 
-        json_str = write_document_to_string(document)
+        from spdx_tools.spdx.writer.json.json_writer import write_document_to_stream
+
+        stream = io.StringIO()
+        write_document_to_stream(document, stream, validate=False)
+        json_str = stream.getvalue()
 
         if pretty:
             data = json.loads(json_str)

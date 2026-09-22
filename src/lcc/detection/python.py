@@ -88,7 +88,7 @@ class PythonDetector(Detector):
                 specs[key].metadata["project_root"] = str(project_root)
             component = specs[key]
             component.metadata.setdefault("sources", [])
-            source_entry = {"source": source}
+            source_entry: dict[str, object] = {"source": source}
             source_entry["project_root"] = str(project_root)
             if metadata:
                 source_entry.update(metadata)
@@ -108,7 +108,7 @@ class PythonDetector(Detector):
         # Requirements.txt
         for requirement in self._parse_requirements_txt(project_root):
             name, version, metadata = requirement
-            register(name, version, metadata.get("source", "requirements.txt"), metadata)
+            register(name, version, str(metadata.get("source", "requirements.txt")), metadata)
             manifest_direct_names.add(canonicalize_name(name))
 
         # setup.py
@@ -124,7 +124,7 @@ class PythonDetector(Detector):
             if self._is_excluded(path, project_root): continue
             for requirement in self._parse_pyproject_file(path, project_root):
                  name, version, metadata = requirement
-                 register(name, version, metadata.pop("source", str(path.relative_to(project_root))), metadata)
+                 register(name, version, str(metadata.pop("source", str(path.relative_to(project_root)))), metadata)
                  manifest_direct_names.add(canonicalize_name(name))
 
         # Pipfile
@@ -157,7 +157,7 @@ class PythonDetector(Detector):
 
         for requirement in self._parse_local_metadata(project_root):
             name, version, metadata = requirement
-            register(name, version, metadata.pop("source"), metadata)
+            register(name, version, str(metadata.pop("source")), metadata)
             manifest_direct_names.add(canonicalize_name(name))
 
         # Build poetry.lock dependency graph for depth calculation
@@ -621,7 +621,7 @@ class PythonDetector(Detector):
         try:
             req = Requirement(requirement)
         except Exception:
-            return (requirement.split()[0], None, metadata or {})
+            return (requirement.split()[0], None, dict(metadata) if metadata else {})
         version = None
         if req.specifier and len(req.specifier) == 1:
             operator, value = next(iter(req.specifier._specs))._spec

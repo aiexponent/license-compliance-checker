@@ -49,11 +49,11 @@ class EmailNotifier(Notifier):
             to_emails: List of recipient email addresses
             use_tls: Whether to use TLS
         """
-        self.smtp_host = smtp_host or os.getenv("LCC_SMTP_HOST", "localhost")
+        self.smtp_host: str = smtp_host or os.getenv("LCC_SMTP_HOST") or "localhost"
         self.smtp_port = smtp_port or int(os.getenv("LCC_SMTP_PORT", "587"))
         self.smtp_user = smtp_user or os.getenv("LCC_SMTP_USER", "")
         self.smtp_password = smtp_password or os.getenv("LCC_SMTP_PASSWORD", "")
-        self.from_email = from_email or os.getenv("LCC_FROM_EMAIL", "noreply@lcc.local")
+        self.from_email: str = from_email or os.getenv("LCC_FROM_EMAIL") or "noreply@lcc.local"
         self.to_emails = to_emails or (os.getenv("LCC_TO_EMAILS", "").split(",") if os.getenv("LCC_TO_EMAILS") else [])
         self.use_tls = use_tls
 

@@ -208,7 +208,7 @@ class CargoDetector(Detector):
             name = package.get("name")
             version = package.get("version")
             if isinstance(name, str):
-                metadata = {"type": "package"}
+                metadata: dict[str, object] = {"type": "package"}
                 if isinstance(package.get("edition"), str):
                     metadata["edition"] = package["edition"]
                 if isinstance(package.get("license"), str):
@@ -226,8 +226,8 @@ class CargoDetector(Detector):
             if isinstance(members, list):
                 for member in members:
                     if isinstance(member, str):
-                        metadata = {"workspace_member": member}
-                        results.append((member, None, metadata))
+                        metadata_ws: dict[str, object] = {"workspace_member": member}
+                        results.append((member, None, metadata_ws))
 
         return results
 

@@ -86,7 +86,7 @@ class DotNetDetector(Detector):
                 component.version = version
 
             component.metadata.setdefault("sources", [])
-            source_entry = {"source": source, "project_root": str(project_root)}
+            source_entry: dict[str, object] = {"source": source, "project_root": str(project_root)}
             if metadata:
                 source_entry.update(metadata)
             component.metadata["sources"].append(source_entry)
@@ -99,17 +99,17 @@ class DotNetDetector(Detector):
         # Parse .csproj files
         for requirement in self._parse_project_files(project_root, "*.csproj"):
             name, version, metadata = requirement
-            register(name, version, metadata.pop("source", ".csproj"), metadata)
+            register(name, version, str(metadata.pop("source", ".csproj")), metadata)
 
         # Parse .fsproj files
         for requirement in self._parse_project_files(project_root, "*.fsproj"):
             name, version, metadata = requirement
-            register(name, version, metadata.pop("source", ".fsproj"), metadata)
+            register(name, version, str(metadata.pop("source", ".fsproj")), metadata)
 
         # Parse .vbproj files
         for requirement in self._parse_project_files(project_root, "*.vbproj"):
             name, version, metadata = requirement
-            register(name, version, metadata.pop("source", ".vbproj"), metadata)
+            register(name, version, str(metadata.pop("source", ".vbproj")), metadata)
 
         # Parse project.json (legacy .NET Core)
         for requirement in self._parse_project_json(project_root):

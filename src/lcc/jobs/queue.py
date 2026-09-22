@@ -27,7 +27,7 @@ from typing import Any
 try:  # pragma: no cover - optional dependency
     import redis
 except ImportError:  # pragma: no cover - optional dependency
-    redis = None
+    redis = None  # type: ignore[assignment]
 
 from lcc.config import LCCConfig
 
@@ -83,7 +83,7 @@ class JobQueue:
         if not config.redis_url or redis is None:
             raise QueueError("Redis is required for JobQueue. Set LCC_REDIS_URL and install redis library.")
         self.config = config
-        self.client = redis.Redis.from_url(config.redis_url, decode_responses=True)
+        self.client: Any = redis.Redis.from_url(config.redis_url, decode_responses=True)
         self.prefix = f"{name}:jobs"
         self.queue_key = f"{self.prefix}:queue"
         self.dead_key = f"{self.prefix}:dead"

@@ -218,11 +218,12 @@ class DatasetCardParser:
         """
         # Extract license
         license_value = frontmatter.get("license") or frontmatter.get("licenses")
+        license_str: str | None = None
         if isinstance(license_value, list):
             # Multiple licenses
-            license_str = " OR ".join(license_value)
-        else:
-            license_str = license_value
+            license_str = " OR ".join(str(item) for item in license_value)
+        elif license_value is not None:
+            license_str = str(license_value)
 
         # Extract tags
         tags = frontmatter.get("tags", [])

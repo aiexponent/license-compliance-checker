@@ -189,7 +189,7 @@ def create_app(config_path: Path | None = None) -> FastAPI:
     )
 
     app.state.limiter = limiter
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
     # CORS: default to empty string (no origins) — must be explicitly set in production
     # Example: LCC_ALLOWED_ORIGINS=https://yourdomain.com,https://app.yourdomain.com
@@ -354,7 +354,7 @@ def create_app(config_path: Path | None = None) -> FastAPI:
                 raise HTTPException(status_code=400, detail=str(exc)) from exc
 
         # Create Scan record
-        project_name = payload.project_name or (payload.repo_url.split("/")[-1].replace(".git", "") if payload.repo_url else Path(payload.path).name)
+        project_name = payload.project_name or (payload.repo_url.split("/")[-1].replace(".git", "") if payload.repo_url else Path(payload.path or "").name)
         scan = Scan(
             project_name=project_name,
             status="queued",
@@ -509,7 +509,8 @@ def create_app(config_path: Path | None = None) -> FastAPI:
 
         data = policy.data
         contexts = []
-        for context_name, payload in (data.get("contexts") or {}).items():
+        raw_contexts = data.get("contexts") if isinstance(data, dict) else {}
+        for context_name, payload in (raw_contexts if isinstance(raw_contexts, dict) else {}).items():
             context_summary = {"name": context_name}
             if isinstance(payload, dict):
                 context_summary.update(

@@ -66,7 +66,7 @@ class RubyDetector(Detector):
                 component.version = version
 
             component.metadata.setdefault("sources", [])
-            source_entry = {"source": source, "project_root": str(project_root)}
+            source_entry: dict[str, object] = {"source": source, "project_root": str(project_root)}
             if metadata:
                 source_entry.update(metadata)
             component.metadata["sources"].append(source_entry)

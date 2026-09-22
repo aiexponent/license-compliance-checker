@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from lcc.detection.base import Detector
 from lcc.models import Component, ComponentType
@@ -105,7 +106,7 @@ class HuggingFaceDatasetDetector(Detector):
         version = dataset_info.get("version", "unknown")
 
         # Build metadata
-        metadata = {
+        metadata: dict[str, Any] = {
             "description": f"Hugging Face dataset: {dataset_name}",
             "format": self._detect_format(path),
         }

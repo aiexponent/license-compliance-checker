@@ -67,7 +67,7 @@ class JavaScriptDetector(Detector):
                 )
                 registry[key].metadata["project_root"] = str(project_root)
             component = registry[key]
-            source_entry = {"source": source}
+            source_entry: dict[str, object] = {"source": source}
             if metadata:
                 source_entry.update(metadata)
                 licenses = component.metadata.setdefault("licenses", set())
@@ -75,9 +75,11 @@ class JavaScriptDetector(Detector):
                     license_value = metadata.get("license")
                     if isinstance(license_value, str):
                         licenses.add(license_value)
-                    for extra in metadata.get("licenses", []) if isinstance(metadata.get("licenses"), list) else []:
-                        if isinstance(extra, str):
-                            licenses.add(extra)
+                    extra_licenses = metadata.get("licenses")
+                    if isinstance(extra_licenses, list):
+                        for extra in extra_licenses:
+                            if isinstance(extra, str):
+                                licenses.add(extra)
             source_entry["project_root"] = str(project_root)
             component.metadata["sources"].append(source_entry)
 
@@ -280,7 +282,8 @@ class JavaScriptDetector(Detector):
                         results.append((name, version if isinstance(version, str) else None, entry_metadata))
 
         base_name = data.get("name")
-        base_version = data.get("version") if isinstance(data.get("version"), str) else None
+        raw_version = data.get("version")
+        base_version: str | None = raw_version if isinstance(raw_version, str) else None
         license_value = data.get("license")
         base_metadata: dict[str, object] = {"source": source}
         if isinstance(license_value, str):

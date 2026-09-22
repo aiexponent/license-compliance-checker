@@ -36,6 +36,7 @@ from rich.table import Table
 from lcc.cache import Cache
 from lcc.config import LCCConfig, load_config
 from lcc.factory import build_detectors, build_resolvers
+from lcc.jobs.queue import Job
 from lcc.models import (
     Component,
     ComponentFinding,
@@ -67,7 +68,7 @@ from lcc.utils.git import GitError, cleanup_repository, clone_repository
 try:  # pragma: no cover - platform dependent
     import readline
 except ImportError:  # pragma: no cover - Windows fallback
-    readline = None
+    readline = None  # type: ignore[assignment]
 
 
 INTERACTIVE_COMMANDS = [
@@ -740,7 +741,7 @@ def handle_policy_test(args: argparse.Namespace) -> int:
     return 0
 
 
-def _deserialize_report(data: dict[str, object]) -> ScanReport:
+def _deserialize_report(data: dict[str, Any]) -> ScanReport:
     findings: list[ComponentFinding] = []
     for item in data.get("findings", []):
         component_data = item.get("component", {})
@@ -1377,7 +1378,7 @@ def apply_policy_to_report(
         return 0, None
 
     recorder = DecisionRecorder(config)
-    policy_context: dict[str, object] = {
+    policy_context: dict[str, Any] = {
         "name": policy_name or ("opa" if opa_client else ""),
         "context": effective_context,
         "violations": [],
@@ -1650,7 +1651,7 @@ def handle_queue_submit(args: argparse.Namespace) -> int:
 
 def handle_queue_worker(args: argparse.Namespace) -> int:
     try:
-        from lcc.jobs.queue import Job, JobQueue, JobQueueWorker, QueueError
+        from lcc.jobs.queue import JobQueue, JobQueueWorker, QueueError
     except ImportError:
         Console().print(
             "[red]The job queue requires the 'server' extra. Install it with: "
@@ -1751,8 +1752,8 @@ def handle_sbom_generate(args: argparse.Namespace) -> int:
                 supplier=args.supplier,
             )
         else:  # spdx
-            generator = SPDXGenerator()
-            generator.generate_from_file(
+            spdx_generator = SPDXGenerator()
+            spdx_generator.generate_from_file(
                 scan_result_path=scan_result_path,
                 output_path=output_path,
                 format=args.sbom_format,

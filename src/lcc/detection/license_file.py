@@ -109,12 +109,12 @@ class LicenseFileDetector(Detector):
         try:
             rel_path = path.relative_to(root)
         except ValueError:
-            rel_path = path.name
+            rel_path = Path(path.name)
 
         return Component(
             name=path.name,
             version="unknown",
             type=ComponentType.GENERIC,
-            path=str(rel_path),
+            path=rel_path,
             metadata={"project_root": str(root)}
         )

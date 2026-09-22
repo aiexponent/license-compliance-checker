@@ -26,7 +26,7 @@ from typing import Any
 try:  # pragma: no cover - optional dependency
     import redis
 except ImportError:  # pragma: no cover - optional dependency
-    redis = None
+    redis = None  # type: ignore[assignment]
 
 from lcc.config import LCCConfig
 
@@ -94,7 +94,7 @@ class RedisCache(BaseCache):
     def __init__(self, url: str, ttl_seconds: int) -> None:
         if redis is None:  # pragma: no cover - optional dependency
             raise RuntimeError("redis package is required for RedisCache")
-        self.client = redis.Redis.from_url(url, decode_responses=True)
+        self.client: Any = redis.Redis.from_url(url, decode_responses=True)
         self.default_ttl = ttl_seconds
 
     def get(self, key: str) -> Any | None:

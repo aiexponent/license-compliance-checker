@@ -68,7 +68,7 @@ class ScanRepository:
         # Delete scans
         result = await self.session.execute(delete(Scan))
         await self.session.commit()
-        return result.rowcount
+        return int(result.rowcount)  # type: ignore[attr-defined]
 
     async def get_dashboard_summary(self) -> dict[str, Any]:
         # Total Scans
@@ -134,7 +134,7 @@ class ScanRepository:
         # Simplified: just get last 6 months of scans and aggregate in python
         # or use date truncation in SQL (dialect specific).
         # Let's use Python aggregation for DB independence (SQLite/PG)
-        trend_data = []
+        trend_data: list[dict[str, Any]] = []
         # ... implementation of trend omitted for brevity, can add if needed
 
         return {

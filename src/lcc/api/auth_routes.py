@@ -228,7 +228,7 @@ def create_auth_router(user_repo: UserRepository) -> APIRouter:
 
         # Verify current password
         user = user_repo.get_user(current_user.username)
-        if not user or not verify_password(request.current_password, user.hashed_password):
+        if not user or not user.hashed_password or not verify_password(request.current_password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Current password is incorrect"
