@@ -8,6 +8,7 @@
 <p align="center">
   <a href="https://pypi.org/project/license-compliance-checker/"><img src="https://img.shields.io/pypi/v/license-compliance-checker.svg" alt="PyPI"></a>
   <a href="https://github.com/aiexponent/license-compliance-checker/actions"><img src="https://github.com/aiexponent/license-compliance-checker/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://aiexponent.github.io/license-compliance-checker/"><img src="https://img.shields.io/badge/docs-MkDocs-0D5463.svg" alt="Documentation"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-0D5463.svg" alt="License: Apache 2.0"></a>
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-0D5463.svg" alt="Python 3.11+"></a>
   <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689"><img src="https://img.shields.io/badge/EU%20AI%20Act-Article%2053-0D5463.svg" alt="EU AI Act Article 53"></a>
@@ -97,6 +98,8 @@ graph TD
     style REG fill:#c9a84c,color:#000
     style OUT fill:#2d5a2d,color:#fff
 ```
+
+See the [User Guide](https://aiexponent.github.io/license-compliance-checker/guides/user/) and [API Reference](https://aiexponent.github.io/license-compliance-checker/reference/api/) for comprehensive architectural and component specifications.
 
 ---
 
@@ -210,6 +213,8 @@ EOF
 lcc scan . --policy my-policy.yaml
 ```
 
+For detailed policy syntax, custom OPA Rego rules, and violation actions, see the [Policy Guide](https://aiexponent.github.io/license-compliance-checker/guides/policies/).
+
 ---
 
 ## CI/CD Integration
@@ -225,6 +230,8 @@ lcc scan . --policy my-policy.yaml
     format: json
     output: license-report.json
 ```
+
+For production deployment patterns, Docker container scanning, and web dashboard access, see the [Deployment Guide](https://aiexponent.github.io/license-compliance-checker/deployment/).
 
 ---
 
@@ -250,6 +257,21 @@ lcc sbom sign sbom.cdx.json --key ~/.gnupg/key.gpg
 - Transitive dependency resolution requires a lock file (`poetry.lock`, `package-lock.json`).
 - Article 53 assessment covers documentation completeness only — not a legal compliance determination.
 - Training data risk registry covers top-50 known datasets; unknown datasets flagged for review.
+
+---
+
+## Documentation
+
+Full documentation is available on the live [Material for MkDocs Documentation Portal](https://aiexponent.github.io/license-compliance-checker/):
+
+- **[Getting Started & Quick Start](https://aiexponent.github.io/license-compliance-checker/getting-started/quickstart/)** — Setup guide, first project scan, and SBOM generation.
+- **[Installation Guide](https://aiexponent.github.io/license-compliance-checker/getting-started/installation/)** — Package managers (`pip`, `uv`), container installation, and requirements.
+- **[User Guide & CLI Manual](https://aiexponent.github.io/license-compliance-checker/guides/user/)** — Comprehensive command-line flags, scanners, and report generators.
+- **[Policy Guide (Rego & YAML)](https://aiexponent.github.io/license-compliance-checker/guides/policies/)** — Authoring custom policies, OPA rules, and compliance gates.
+- **[API Reference & Schemas](https://aiexponent.github.io/license-compliance-checker/reference/api/)** — Python SDK, FastAPI endpoints, and schema definitions.
+- **[Deployment & Dashboard Guide](https://aiexponent.github.io/license-compliance-checker/deployment/)** — Production checklists, Docker deployment, and web dashboard access.
+- **[Troubleshooting & FAQ](https://aiexponent.github.io/license-compliance-checker/reference/faq/)** — Common questions, licensing nuances, and SARIF non-support rationale.
+- **[Testing Guide](https://aiexponent.github.io/license-compliance-checker/guides/testing/)** — Running the automated test suite and integration test environments.
 
 ---
 

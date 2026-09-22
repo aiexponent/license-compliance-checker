@@ -103,7 +103,7 @@ test = [
 [project.urls]
 Homepage = "https://github.com/aiexponent/license-compliance-checker"
 Repository = "https://github.com/aiexponent/license-compliance-checker"
-Documentation = "https://github.com/aiexponent/license-compliance-checker#readme"
+Documentation = "https://aiexponent.github.io/license-compliance-checker/"
 "Bug Tracker" = "https://github.com/aiexponent/license-compliance-checker/issues"
 Changelog = "https://github.com/aiexponent/license-compliance-checker/releases"
 
