@@ -84,9 +84,10 @@ class UserRepository:
                 username = os.getenv("LCC_ADMIN_USERNAME", "admin")
                 email = os.getenv("LCC_ADMIN_EMAIL", "admin@example.com")
                 password = os.getenv("LCC_ADMIN_PASSWORD")
-                generated = password is None
-                if generated:
+                generated = False
+                if password is None:
                     password = secrets.token_urlsafe(24)
+                    generated = True
 
                 conn.execute("""
                     INSERT INTO users (username, email, full_name, hashed_password, role, disabled, must_change_password, created_at, updated_at)

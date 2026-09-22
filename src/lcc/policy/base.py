@@ -24,6 +24,7 @@ from collections.abc import Iterable, Sequence
 from dataclasses import asdict, dataclass, field
 from importlib import resources as importlib_resources
 from pathlib import Path
+from typing import Any
 
 try:
     import yaml
@@ -100,7 +101,7 @@ class PolicyManager:
         try:
             package_root = importlib_resources.files("lcc.data.policies")
             for resource in package_root.iterdir():
-                if resource.is_file() and resource.suffix in {".yml", ".yaml"}:
+                if resource.is_file() and resource.name.endswith((".yml", ".yaml")):
                     _copy_payload(resource.name, resource.read_text(encoding="utf-8"))
         except (ModuleNotFoundError, FileNotFoundError):  # pragma: no cover - defensive
             pass
@@ -227,7 +228,7 @@ class PolicyManager:
         except PermissionError:
             fallback_path.parent.mkdir(parents=True, exist_ok=True)
             target_path = fallback_path
-        config = {}
+        config: dict[str, Any] = {}
         if target_path.exists() and yaml:
             config = yaml.safe_load(target_path.read_text(encoding="utf-8")) or {}
         elif target_path.exists():
@@ -268,7 +269,7 @@ class PolicyManager:
 
 
 def evaluate_policy(
-    policy: dict[str, object],
+    policy: dict[str, Any],
     licenses: Iterable[str],
     *,
     context: str | None = None,
@@ -297,10 +298,11 @@ def evaluate_policy(
     if context and context in contexts:
         context_name = context
     else:
-        context_name = policy.get("default_context")
+        raw_default = policy.get("default_context")
+        context_name = str(raw_default) if raw_default else ""
         if not context_name or context_name not in contexts:
             context_name = next(iter(contexts.keys()))
-    context_data: dict[str, object] = contexts.get(context_name, {})
+    context_data: dict[str, Any] = contexts.get(context_name, {}) if isinstance(contexts, dict) else {}
 
     overrides = context_data.get("overrides", {}) if isinstance(context_data, dict) else {}
     if isinstance(overrides, dict) and component_name and component_name in overrides:
@@ -310,7 +312,7 @@ def evaluate_policy(
             context=context_name,
             chosen_license=override_entry.get("license"),
             reasons=[override_entry.get("reason", "Component-level override applied.")],
-            disclaimer=policy.get("disclaimer"),
+            disclaimer=str(policy.get("disclaimer")) if policy.get("disclaimer") is not None else None,
             explanation=override_entry.get("explanation"),
             override="component",
         )
@@ -324,7 +326,7 @@ def evaluate_policy(
     review_patterns = _ensure_list(context_data.get("review"))
     deny_reasons = _ensure_mapping(context_data.get("deny_reasons"))
     review_reasons = _ensure_mapping(context_data.get("review_reasons"))
-    preference = context_data.get("dual_license_preference", "most_permissive")
+    preference = str(context_data.get("dual_license_preference", "most_permissive"))
     preferred_order = _ensure_list(context_data.get("preferred_order"))
 
     # Determine disposition for every candidate
@@ -372,7 +374,7 @@ def evaluate_policy(
         chosen_license=chosen_license,
         reasons=reasons,
         alternatives=alternatives,
-        disclaimer=policy.get("disclaimer"),
+        disclaimer=str(policy.get("disclaimer")) if policy.get("disclaimer") is not None else None,
         explanation=_resolve_context_explanation(context_data),
     )
 

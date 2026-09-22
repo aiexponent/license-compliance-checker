@@ -149,7 +149,7 @@ async def get_sbom(
             generator.save(bom, output_path, format=output_format)
 
         else:  # spdx
-            generator = SPDXGenerator()
+            spdx_generator = SPDXGenerator()
 
             # Convert scan to ScanResult format
             from datetime import datetime
@@ -161,7 +161,7 @@ async def get_sbom(
                 component_results=[
                     ComponentResult(
                         component=comp,
-                        status=Status.PASS,
+                        status=Status.PASS,  # Default, should come from policy eval
                         licenses=comp.get("licenses", []),
                         violations=[],
                         warnings=[],
@@ -172,13 +172,13 @@ async def get_sbom(
                 timestamp=datetime.fromisoformat(scan["generated_at"]),
             )
 
-            document = generator.generate(
+            document = spdx_generator.generate(
                 scan_result=scan_result,
                 project_name=project_name,
                 project_version=project_version,
                 creator=author,
             )
-            generator.save(document, output_path, format=output_format)
+            spdx_generator.save(document, output_path, format=output_format)
 
         # Return file
         media_type_map = {

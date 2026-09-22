@@ -99,7 +99,7 @@ class MavenDetector(Detector):
                 project_version = self._text(parent.find(self._ns(namespace, "version")))
 
         if project_group and project_artifact:
-            metadata = {
+            metadata: dict[str, object] = {
                 "type": "project",
                 "packaging": self._text(root.find(self._ns(namespace, "packaging"))) or "jar",
             }

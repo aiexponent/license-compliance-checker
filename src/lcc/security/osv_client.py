@@ -42,7 +42,7 @@ class OSVClient:
         Returns:
             List of vulnerability dictionaries.
         """
-        payload = {
+        payload: dict[str, Any] = {
             "version": version,
             "package": {
                 "name": name,

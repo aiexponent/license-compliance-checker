@@ -19,6 +19,7 @@ import logging
 import re
 import shutil
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 
 from git import GitCommandError, Repo
@@ -127,7 +128,7 @@ def clone_repository(repo_url: str, ref: str | None = None, depth: int = 1) -> P
         # If ref is provided, we might need to fetch specific ref.
         # For simplicity in this phase, we'll just clone default branch if ref is None.
 
-        kwargs = {"depth": depth} if depth > 0 else {}
+        kwargs: dict[str, Any] = {"depth": depth} if depth > 0 else {}
         if ref:
             kwargs["branch"] = ref
 

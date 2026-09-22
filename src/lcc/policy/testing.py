@@ -16,9 +16,11 @@
 
 from __future__ import annotations
 
+import itertools
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from lcc.config import LCCConfig, load_config
 from lcc.policy.base import PolicyManager, evaluate_policy
@@ -73,17 +75,17 @@ class PolicyTestResult:
 
 
 def load_suite(path: Path) -> PolicyTestSuite:
-    data = json.loads(path.read_text(encoding="utf-8")) if path.suffix == ".json" else _load_yaml(path)
+    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8")) if path.suffix == ".json" else _load_yaml(path)
     cases = [
         PolicyTestCase(
-            name=item["name"],
-            license=item["license"],
-            expected=item.get("expected", "pass"),
+            name=str(item["name"]),
+            license=str(item["license"]),
+            expected=str(item.get("expected", "pass")),
             description=item.get("description"),
         )
         for item in data.get("cases", [])
     ]
-    return PolicyTestSuite(name=data.get("name", path.stem), policy_name=data["policy"], cases=cases)
+    return PolicyTestSuite(name=str(data.get("name", path.stem)), policy_name=str(data["policy"]), cases=cases)
 
 
 def run_suite(suite: PolicyTestSuite, manager: PolicyManager) -> PolicyTestResult:
@@ -102,13 +104,13 @@ def run_all(config: LCCConfig | None = None, suites_dir: Path | None = None) -> 
     results: list[PolicyTestResult] = []
     if not suites_dir.exists():
         return results
-    for path in suites_dir.glob("*.yml") | suites_dir.glob("*.yaml") | suites_dir.glob("*.json"):
+    for path in itertools.chain(suites_dir.glob("*.yml"), suites_dir.glob("*.yaml"), suites_dir.glob("*.json")):
         suite = load_suite(path)
         results.append(run_suite(suite, manager))
     return results
 
 
-def _load_yaml(path: Path) -> dict[str, object]:
+def _load_yaml(path: Path) -> dict[str, Any]:
     try:
         import yaml  # type: ignore
     except ImportError as exc:  # pragma: no cover - dependency optional

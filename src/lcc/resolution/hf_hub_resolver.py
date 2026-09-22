@@ -27,7 +27,7 @@ from urllib.request import Request, urlopen
 logger = logging.getLogger(__name__)
 
 HF_API_BASE = "https://huggingface.co/api"
-HF_CACHE: dict[str, dict] = {}  # Simple in-memory cache
+HF_CACHE: dict[str, HFModelInfo] = {}  # Simple in-memory cache
 
 
 @dataclass

@@ -22,7 +22,7 @@ Create Date: 2025-11-24 06:32:57.106615
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-from alembic import op
+from alembic import op  # type: ignore[attr-defined]
 
 # revision identifiers, used by Alembic.
 revision: str = '0eb001250416'

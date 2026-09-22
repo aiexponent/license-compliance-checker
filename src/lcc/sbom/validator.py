@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from cyclonedx.schema import SchemaVersion
 from cyclonedx.validation.json import JsonStrictValidator
@@ -77,6 +78,7 @@ class SBOMValidator:
             # cyclonedx-python-lib v11.x validates raw document strings against a
             # given schema version. validate_str() returns None when the document
             # is valid, or a ValidationError describing the first problem found.
+            validator: Any
             if format.lower() == "json":
                 validator = JsonStrictValidator(schema_version)
             elif format.lower() == "xml":

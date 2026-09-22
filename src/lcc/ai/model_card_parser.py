@@ -246,11 +246,14 @@ class ModelCardParser:
         """
         # Extract license
         license_value = frontmatter.get("license")
+        license_str: str | None
         if isinstance(license_value, list):
             # Multiple licenses
-            license_str = " OR ".join(license_value)
+            license_str = " OR ".join(str(lic) for lic in license_value)
+        elif license_value is not None:
+            license_str = str(license_value)
         else:
-            license_str = license_value
+            license_str = None
 
         # Extract tags
         tags = frontmatter.get("tags", [])
@@ -263,9 +266,14 @@ class ModelCardParser:
             datasets = [datasets]
 
         # Extract language
-        language = frontmatter.get("language")
-        if isinstance(language, list) and language:
-            language = language[0]
+        language_raw = frontmatter.get("language")
+        language: str | None
+        if isinstance(language_raw, list):
+            language = str(language_raw[0]) if language_raw else None
+        elif language_raw is not None:
+            language = str(language_raw)
+        else:
+            language = None
 
         # Extract pipeline tag
         pipeline_tag = frontmatter.get("pipeline_tag")

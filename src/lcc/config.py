@@ -32,7 +32,7 @@ from platformdirs import user_cache_dir
 try:
     from dotenv import load_dotenv
 except ImportError:
-    def load_dotenv():
+    def load_dotenv(*args: Any, **kwargs: Any) -> Any:  # type: ignore[misc]
         return None  # Fallback if not installed
 
 # Load environment variables from .env file

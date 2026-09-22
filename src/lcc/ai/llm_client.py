@@ -112,7 +112,7 @@ class LLMClient:
             # For strict OpenAI/Fireworks compatibility:
             kwargs["response_format"] = {"type": "json_object"}
 
-            response = self.client.chat.completions.create(**kwargs)
+            response = self.client.chat.completions.create(**kwargs)  # type: ignore[call-overload]
             content = response.choices[0].message.content
 
             if not content:
