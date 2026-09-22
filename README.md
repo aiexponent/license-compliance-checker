@@ -53,6 +53,26 @@ lcc scan . --project-license Apache-2.0 --context saas
 
 ---
 
+## Supported Export Formats
+
+LCC produces industry-standard Software Composition Analysis (SCA), SBOM, and regulatory compliance artifacts:
+
+| Format Specification | Standard / Schema | Invocation | Primary Use Case |
+| :--- | :--- | :--- | :--- |
+| **CycloneDX SBOM** | CycloneDX v1.5 (JSON, XML) | `lcc sbom generate scan-report.json --format cyclonedx` | Enterprise supply chain security, dependency graph auditing, regulatory filing |
+| **SPDX SBOM** | SPDX v2.3 (JSON, YAML, Tag-Value) | `lcc sbom generate scan-report.json --format spdx` | Standard open-source licensing compliance & legal package review |
+| **JSON Report** | Structured component findings | `lcc scan . --format json --output report.json` | CI/CD pipelines, automated gating, custom dashboards |
+| **HTML Report** | Standalone interactive report | `lcc report generate scan-report.json --format html` | Executive & legal counsel review without CLI tools |
+| **Markdown Report** | Clean GitHub Flavored Markdown | `lcc report generate scan-report.json --format markdown` | Pull request comments, developer documentation |
+| **CSV Export** | Tabular component spreadsheet | `lcc report generate scan-report.json --format csv` | Spreadsheets & procurement inventory ingestion |
+| **Attribution Notice** | Formatted third-party notices | `lcc report generate scan-report.json --format attribution` | Distribution compliance & shipping notice packs |
+| **Article 53 Pack** | 4-file compliance pack | `lcc compliance-pack` | Official EU AI Act Article 53 GPAI regulatory submission |
+
+> [!NOTE]
+> **SARIF Export Clarification**: LCC generates Software Composition Analysis (SCA) data, SBOMs, and regulatory compliance packs. It does **not** generate SARIF (Static Analysis Results Interchange Format) output, as SARIF is designed for static source code defect / flaw reporting. For SARIF-based EU AI Act compliance screening, see [LitmusAI](https://github.com/aiexponent/litmusai) (Article 5 Prohibited Practices Screener).
+
+---
+
 ## Architecture
 
 ```mermaid

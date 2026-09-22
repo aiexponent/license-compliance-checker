@@ -71,14 +71,14 @@ lcc scan /path/to/your/project --format json --output results.json
 
 ## 4. Generate an SBOM
 
-Create a Software Bill of Materials in CycloneDX or SPDX format:
+Create a Software Bill of Materials in CycloneDX or SPDX format from your scan report:
 
 ```bash
-# CycloneDX format
-lcc sbom /path/to/your/project --format cyclonedx --output sbom.json
+# CycloneDX format (JSON)
+lcc sbom generate results.json --format cyclonedx --output sbom.json
 
-# SPDX format
-lcc sbom /path/to/your/project --format spdx --output sbom.spdx.json
+# SPDX format (JSON)
+lcc sbom generate results.json --format spdx --output sbom.spdx.json
 ```
 
 ---
