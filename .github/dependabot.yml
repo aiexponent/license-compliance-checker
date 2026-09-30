@@ -1,25 +1,97 @@
 version: 2
+
+# One grouped PR per ecosystem for routine minor and patch bumps, and one
+# grouped PR for security fixes. Routine major bumps are not proposed for pip
+# or npm: they are migrations and get planned by hand. Security updates are not
+# affected by that rule. The cooldown keeps versions published in the last
+# week out of version PRs.
+
 updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
+    groups:
+      pip-minor-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+      pip-security:
+        applies-to: security-updates
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  # Docs site requirements are open floors; only touch one when it blocks.
+  - package-ecosystem: "pip"
+    directory: "/docs"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    versioning-strategy: "increase-if-necessary"
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
+    groups:
+      docs-security:
+        applies-to: security-updates
+        patterns: ["*"]
 
   - package-ecosystem: "npm"
     directory: "/dashboard"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
+    groups:
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "npm"
+    directory: "/vscode-extension"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    groups:
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+      npm-security:
+        applies-to: security-updates
+        patterns: ["*"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    groups:
+      actions:
+        patterns: ["*"]
