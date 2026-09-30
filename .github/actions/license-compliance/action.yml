@@ -73,14 +73,15 @@ runs:
         LCC_OPA_TOKEN: ${{ inputs.LCC_OPA_TOKEN || env.LCC_OPA_TOKEN }}
         LCC_REDIS_URL: ${{ inputs.LCC_REDIS_URL || env.LCC_REDIS_URL }}
       run: |
-        # Build exclude flags
-        EXCLUDE_FLAGS=""
+        # Build exclude flags. An array keeps each pattern as one argument, so
+        # the shell never expands a glob like tests/** into file names.
+        EXCLUDE_ARGS=()
         if [ -n "${{ inputs.exclude }}" ]; then
           IFS=',' read -ra PATTERNS <<< "${{ inputs.exclude }}"
           for pattern in "${PATTERNS[@]}"; do
             trimmed="$(echo "$pattern" | xargs)"
             if [ -n "$trimmed" ]; then
-              EXCLUDE_FLAGS="$EXCLUDE_FLAGS --exclude $trimmed"
+              EXCLUDE_ARGS+=(--exclude "$trimmed")
             fi
           done
         fi
@@ -115,7 +116,7 @@ runs:
           --output "${{ inputs.output }}" \
           --threshold "${{ inputs.threshold }}" \
           ${{ inputs.policy && format('--policy {0}', inputs.policy) || '' }} \
-          $EXCLUDE_FLAGS \
+          "${EXCLUDE_ARGS[@]}" \
           $MANIFEST_FLAGS
         SCAN_EXIT=$?
         set -e

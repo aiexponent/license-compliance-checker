@@ -24,6 +24,10 @@ jobs:
 
       - name: Run basic scan
         id: scan
+        # Default fail-on is violations, and this repo's own scan reports
+        # some. The job checks that outputs are well formed, so a violation
+        # result must not stop it before the next step.
+        continue-on-error: true
         uses: ./.github/actions/license-compliance
         with:
           path: .
