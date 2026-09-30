@@ -3,6 +3,7 @@
   "displayName": "LCC \u2014 License Compliance Checker",
   "description": "Scan manifest files for license compliance issues inline in VS Code",
   "version": "0.1.0",
+  "repository": { "type": "git", "url": "https://github.com/aiexponent/license-compliance-checker.git", "directory": "vscode-extension" },
   "publisher": "aiexponent",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Linters", "Other"],
@@ -70,6 +71,6 @@
     "@types/vscode": "^1.85.0",
     "@types/node": "^20.0.0",
     "typescript": "^5.3.0",
-    "@vscode/vsce": "^2.22.0"
+    "@vscode/vsce": "^4.0.0"
   }
 }
