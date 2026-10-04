@@ -45,6 +45,7 @@ from spdx_tools.spdx.model import (
 )
 from spdx_tools.spdx.writer.write_anything import write_file
 
+from lcc import __version__
 from lcc.models import Component, ComponentResult, ComponentType, ScanResult
 from lcc.sbom.regulatory_properties import get_regulatory_annotation_text
 
@@ -82,7 +83,7 @@ class SPDXGenerator:
     def __init__(
         self,
         tool_name: str = "license-compliance-checker",
-        tool_version: str = "0.1.0",
+        tool_version: str = __version__,
         organization: str = "LCC Contributors",
     ) -> None:
         self.tool_name = tool_name
