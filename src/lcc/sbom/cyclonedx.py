@@ -44,6 +44,7 @@ from cyclonedx.output.json import JsonV1Dot5
 from cyclonedx.output.xml import XmlV1Dot5
 from packageurl import PackageURL
 
+from lcc import __version__
 from lcc.models import Component, ComponentType, ScanResult
 from lcc.sbom.regulatory_properties import get_regulatory_properties
 
@@ -63,7 +64,7 @@ class CycloneDXGenerator:
     def __init__(
         self,
         tool_name: str = "license-compliance-checker",
-        tool_version: str = "0.1.0",
+        tool_version: str = __version__,
         tool_vendor: str = "LCC Contributors",
     ) -> None:
         self.tool_name = tool_name
@@ -114,9 +115,21 @@ class CycloneDXGenerator:
             bom.metadata.supplier = org
 
         # Convert components
+        cdx_components = []
         for component in scan_result.components:
             cdx_component = self._convert_component(component, scan_result)
             bom.components.add(cdx_component)
+            cdx_components.append(cdx_component)
+
+        # Describe the project the BOM is for; the scanned components are its dependencies
+        if project_name:
+            root = CdxComponent(
+                name=project_name,
+                version=project_version,
+                type=CdxComponentType.APPLICATION,
+            )
+            bom.metadata.component = root
+            bom.register_dependency(root, cdx_components)
 
         return bom
 

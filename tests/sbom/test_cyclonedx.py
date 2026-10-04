@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from lcc import __version__
 from lcc.models import (
     Component,
     ComponentResult,
@@ -108,7 +109,7 @@ def test_cyclonedx_generator_initialization():
     """Test CycloneDX generator initialization."""
     generator = CycloneDXGenerator()
     assert generator.tool_name == "license-compliance-checker"
-    assert generator.tool_version == "0.1.0"
+    assert generator.tool_version == __version__
     assert generator.tool_vendor == "LCC Contributors"
 
 

@@ -17,6 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.2] - 2026-10-04
+
+### Fixed
+- `lcc sbom generate` now reads the report written by `lcc scan --format json`. In 2.0.1 it only understood the internal ScanResult shape, so it wrote a CycloneDX or SPDX SBOM with no components while reporting success.
+- `lcc sbom generate` now fails with a clear error when the input is not an LCC scan report, instead of writing an empty SBOM.
+- SBOMs record the installed LCC version as the generating tool (was hard-coded to `0.1.0`).
+- CycloneDX SBOMs now include `--project-name` and `--project-version` as the BOM's root component, with the scanned components as its dependencies. These options were accepted but ignored.
+
+### Documentation
+- Quick Start step 2 now writes `scan-report.json`, which step 4 (`lcc sbom generate`) reads.
+
+---
+
 ## [2.0.1] - 2026-09-22
 
 ### Added

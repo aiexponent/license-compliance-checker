@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "license-compliance-checker"
-version = "2.0.1"
+version = "2.0.2"
 description = "License Compliance Checker (LCC) - Enterprise-grade open source compliance tool."
 authors = [
   { name = "Ajay Pundhir" }

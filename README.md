@@ -55,8 +55,8 @@ pip install license-compliance-checker
 # 1. Quick project scan (multi-ecosystem dependencies)
 lcc scan .
 
-# 2. Scan with EU AI Act Article 53 compliance policy
-lcc scan . --policy eu-ai-act-compliance --format json
+# 2. Scan with EU AI Act Article 53 compliance policy and save the JSON report
+lcc scan . --policy eu-ai-act-compliance --format json --output scan-report.json
 
 # 3. Scan AI models & binary weights (Hugging Face Hub, GGUF, ONNX)
 lcc scan . --scan-models
@@ -514,7 +514,8 @@ Full documentation is available on the live [Material for MkDocs Documentation P
 
 | Version | Highlights |
 |---|---|
-| **[v2.0.1](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.1)** | Hard-gated type checking in CI (0 errors across 99 files), Python 3.13 matrix, live Material for MkDocs portal, 8-format Supported Export Formats, reciprocal 5-tool ecosystem footer, flat-square badges & Dependabot. |
+| **[v2.0.2](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.2)** | Fixes `lcc sbom generate` on the report written by `lcc scan --format json` (2.0.1 produced an SBOM with no components), records the real LCC version in SBOMs, and honours `--project-name` and `--project-version`. |
+| [v2.0.1](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.1) | Hard-gated type checking in CI (0 errors across 99 files), Python 3.13 matrix, live Material for MkDocs portal, 8-format Supported Export Formats, reciprocal 5-tool ecosystem footer, flat-square badges & Dependabot. |
 | [v2.0.0](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.0) | Major release: OPA Rego policy engine, EU AI Act Article 53 compliance packs, CycloneDX 1.5 & SPDX 2.3 SBOM generation, AI model & GGUF/ONNX detection. |
 | [v1.0.0](https://github.com/aiexponent/license-compliance-checker/releases/tag/v1.0.0) | Initial release of multi-ecosystem dependency license scanner. |
 
