@@ -1,5 +1,8 @@
 version: 2
 
+# Monthly runs (PRD-315, 2026-10-11) keep bot PRs to one batch a month.
+# Security updates do not follow this schedule and still arrive right away.
+
 # One grouped PR per ecosystem for routine minor and patch bumps, and one
 # grouped PR for security fixes. Routine major bumps are not proposed for pip
 # or npm: they are migrations and get planned by hand. Security updates are not
@@ -10,7 +13,7 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
@@ -31,7 +34,7 @@ updates:
   - package-ecosystem: "pip"
     directory: "/docs"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     cooldown:
       default-days: 7
     versioning-strategy: "increase-if-necessary"
@@ -46,7 +49,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/dashboard"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
@@ -66,7 +69,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/vscode-extension"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
@@ -86,7 +89,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
