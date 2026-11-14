@@ -353,7 +353,7 @@ What the pack is not:
 
 | Ecosystem | Files detected |
 |---|---|
-| Python | `requirements.txt`, `requirements-*.txt`, `pyproject.toml`, `setup.py`, `Pipfile`, `poetry.lock`, `environment.yml` |
+| Python | `requirements.txt`, `pyproject.toml`, `setup.py`, `Pipfile`, `poetry.lock`, `environment.yml`. Files named `requirements-*.txt` are read only when one of these is also present. |
 | JavaScript and TypeScript | `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml` |
 | Go | `go.mod`, `go.sum` |
 | Java (Maven) | `pom.xml` |
@@ -381,7 +381,7 @@ Open `http://localhost:3000` to explore scan results. See the [Deployment and Da
 ## Known Limitations
 
 - **Gated Hugging Face models.** When the Hub lookup fails, the license shown for the model is not reliable. See the warning under [AI models and datasets](#ai-models-and-datasets).
-- **Network use.** A scan looks up licenses online. With `--offline`, LCC skips network calls, and a license it cannot find locally is shown as `UNRESOLVED`, which counts as a violation.
+- **Network use.** A scan looks up licenses online. With `--offline`, LCC skips the license lookup calls, and a license it cannot find locally is shown as `UNRESOLVED`, which counts as a violation. `--offline` does not turn off the policy server: if `LCC_OPA_URL` is set, the policy check still sends component names, licenses and confidence scores to that server.
 - **Missing folder.** `lcc scan` on a path that does not exist reports zero components and exits with `0`.
 - **Transitive dependencies** need `--include-transitive` and a lock file (`poetry.lock` or `package-lock.json`).
 - **Confidence.** Each result has a confidence score. Treat a low score as a prompt to check the license yourself.
@@ -432,9 +432,13 @@ pytest
 
 <a name="privacy"></a>
 
-LCC has no telemetry and no usage tracking. Your source code, reports and SBOMs stay on your machine.
+LCC has no telemetry and no usage tracking. With the default settings, your source code, reports and SBOMs stay on your machine.
 
-To resolve licenses, a scan sends package names and versions, and Hugging Face model names, to public sources: package registries, ClearlyDefined, GitHub and the Hugging Face Hub. Use `--offline` to skip those calls.
+A scan does send some data out:
+
+- **License lookups (on by default).** Package names and versions, and Hugging Face model names, go to public sources: package registries, ClearlyDefined, GitHub and the Hugging Face Hub. Use `--offline` to skip these calls.
+- **Policy server (only if you set `LCC_OPA_URL`).** Component names, licenses and confidence scores go to the OPA server you configured. `--offline` does not turn this off.
+- **LLM analysis (off by default).** If you install the `ai` extra and set `LCC_LLM_PROVIDER`, LCC sends text from your files, up to 2,000 characters per request, to that provider. This is file content, not only package names.
 
 ---
 
