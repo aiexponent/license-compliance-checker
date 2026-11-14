@@ -9,6 +9,11 @@ version: 2
 # affected by that rule. The cooldown keeps versions published in the last
 # week out of version PRs.
 
+# Python requirements here are open floors (">=x"), so a newer release is
+# already installed without any change. Version PRs for pip only raised those
+# floors, one PR per package, so they are switched off with
+# open-pull-requests-limit: 0. Security updates still open PRs.
+
 updates:
   - package-ecosystem: "pip"
     directory: "/"
@@ -16,7 +21,7 @@ updates:
       interval: "monthly"
     cooldown:
       default-days: 7
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
     groups:
@@ -38,7 +43,7 @@ updates:
     cooldown:
       default-days: 7
     versioning-strategy: "increase-if-necessary"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
     groups:
