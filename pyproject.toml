@@ -55,7 +55,7 @@ dependencies = [
   "packageurl-python>=0.11.0",
   "huggingface-hub>=0.19.0",
   "python-gnupg>=0.5.0",
-  "gitpython>=3.1.50",
+  "gitpython>=3.2.1",
   "python-dotenv>=1.0.0"
 ]
 
