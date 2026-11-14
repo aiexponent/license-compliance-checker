@@ -83,5 +83,16 @@ jobs:
       # PYSEC-2026-1325 (ecdsa): a Minerva-style timing side channel with no
       # fixed release. It is pulled transitively by python-jose and is not
       # exploitable in this offline signing/verification path, so it is waived.
+      #
+      # PYSEC-2026-4298 and its alias PYSEC-2024-232 (python-jose): algorithm
+      # confusion when a token is verified with a public key. No fixed release
+      # exists (3.5.0 is the latest and is affected). The server signs and
+      # verifies with one symmetric secret and pins algorithms=["HS256"]
+      # (src/lcc/auth/core.py), so no public key is ever used. Waived until
+      # python-jose is replaced or fixed.
       - name: Audit dependencies for known vulnerabilities
-        run: pip-audit --vulnerability-service osv --ignore-vuln PYSEC-2026-1325
+        run: >-
+          pip-audit --vulnerability-service osv
+          --ignore-vuln PYSEC-2026-1325
+          --ignore-vuln PYSEC-2026-4298
+          --ignore-vuln PYSEC-2024-232
