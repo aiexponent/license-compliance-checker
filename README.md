@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aiexponent/license-compliance-checker/main/.github/brand/og-license-compliance-checker-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aiexponent/license-compliance-checker/main/.github/brand/og-license-compliance-checker-light.png">
-    <img src="https://raw.githubusercontent.com/aiexponent/license-compliance-checker/main/.github/brand/og-license-compliance-checker-dark.png" alt="License Compliance Checker — Multi-ecosystem license & AI model scanner for EU AI Act Article 53" width="100%"/>
+    <img src="https://raw.githubusercontent.com/aiexponent/license-compliance-checker/main/.github/brand/og-license-compliance-checker-dark.png" alt="License Compliance Checker: dependency license scanner and SBOM generator" width="100%"/>
   </picture>
   <h1 align="center">License Compliance Checker (LCC)</h1>
   <p align="center"><em>Know what you ship. Know what you owe.</em></p>
@@ -13,216 +13,157 @@
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-0D5463.svg?style=flat-square" alt="License: Apache 2.0"></a>
     <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11%2B-0D5463.svg?style=flat-square" alt="Python 3.11+"></a>
     <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689"><img src="https://img.shields.io/badge/EU%20AI%20Act-Article%2053-0D5463.svg?style=flat-square" alt="EU AI Act Article 53"></a>
-    <a href="#privacy"><img src="https://img.shields.io/badge/telemetry-zero-0B7A4B.svg?style=flat-square" alt="Zero telemetry"></a>
+    <a href="#privacy"><img src="https://img.shields.io/badge/telemetry-none-0B7A4B.svg?style=flat-square" alt="No telemetry"></a>
   </p>
 </div>
 
 ---
 
-> **License Compliance Checker automates Software Composition Analysis (SCA), CycloneDX/SPDX SBOM generation, AI model licensing detection, and EU AI Act Article 53 compliance packs. Apache 2.0, AS IS.**
+> **License Compliance Checker (LCC) scans a project's dependencies for licenses, checks them against a policy, and writes CycloneDX and SPDX SBOMs. It can also write an EU AI Act Article 53 documentation pack for the AI models it finds. Apache 2.0, AS IS.**
 >
-> LCC turns multi-ecosystem software licensing, foundation model licensing, and GPAI transparency into an automated developer workflow and CI gate. LCC is an engineering automation tool; it is **not** legal counsel and does not constitute a formal legal compliance determination.
+> LCC is an engineering tool. It is **not** legal advice and it does not decide whether you meet any law. Its output is evidence for your own review.
+
+Every command on this page was run on version 2.0.2 with Python 3.11.
 
 ---
 
-## The Problem
+## What it is for
 
-On **August 2, 2025**, the statutory obligations for providers of General-Purpose AI (GPAI) models under Article 53 of the EU AI Act ([Regulation (EU) 2024/1689](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689)) entered into active legal enforcement across all 27 EU member states.
+Most projects ship code they did not write: packages, and now AI models and datasets. Each one comes with license terms. LCC answers one question from the command line or in CI:
 
-Providers and deployers of GPAI models face mandatory statutory requirements to maintain technical documentation, publish detailed summaries of content used for training, and respect EU copyright and licensing laws.
+> *Which licenses are in this project, and does any of them break our policy?*
 
-* **Statutory Enforcement Date**: GPAI model obligations under Article 53 became enforceable on **2 August 2025**.
-* **Statutory Non-Compliance Penalties**: Fines up to **€35,000,000 or 7% of total worldwide annual turnover**.
-* **The Compliance Blind Spot**: Traditional Software Composition Analysis (SCA) tools only inspect standard package manifests (`package.json`, `requirements.txt`). They are completely blind to Hugging Face model weights, local GGUF/ONNX binary weights, and training datasets with restrictive non-commercial or academic-only terms (e.g. RAIL, Llama Community License, OpenRAIL).
+Article 53 of the EU AI Act ([Regulation (EU) 2024/1689](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689)) sets documentation and copyright obligations for providers of general-purpose AI models. LCC can write a starting pack of documents for that work. See [EU AI Act Article 53 pack](#eu-ai-act-article-53-pack) for what the pack does and does not cover.
 
-**License Compliance Checker (LCC)** resolves the software supply chain and AI provenance gap directly in your terminal and CI/CD pipeline:
-
-> *"Do we know the exact licensing terms, commercial restrictions, and Article 53 compliance obligations of every open-source dependency, AI model weight, and dataset in our AI software stack?"*
-
-Audit your polyglot codebases across 8+ ecosystems and analyze AI models in under 60 seconds, completely offline, with zero telemetry.
-
-Built by [AI Exponent LLC](https://aiexponent.com). Apache 2.0. Runs entirely offline after `pip install`.
+Built by [AI Exponent LLC](https://aiexponent.com).
 
 ---
 
 ## Quick Start
 
+LCC needs **Python 3.11 or newer**.
+
 ```bash
 pip install license-compliance-checker
 ```
 
+Run it in a folder that has a manifest such as `requirements.txt` or `package.json`:
+
 ```bash
-# 1. Quick project scan (multi-ecosystem dependencies)
+# 1. Scan the project and print a table
 lcc scan .
 
-# 2. Scan with EU AI Act Article 53 compliance policy and save the JSON report
-lcc scan . --policy eu-ai-act-compliance --format json --output scan-report.json
+# 2. Save the scan as a JSON report
+lcc scan . --format json --output scan-report.json
 
-# 3. Scan AI models & binary weights (Hugging Face Hub, GGUF, ONNX)
-lcc scan . --scan-models
-
-# 4. Generate an industry-standard CycloneDX or SPDX SBOM
+# 3. Write a CycloneDX or SPDX SBOM from that report
 lcc sbom generate scan-report.json --format cyclonedx --output sbom.json
+lcc sbom generate scan-report.json --format spdx --output sbom.spdx.json
 
-# 5. Check GPL / copyleft contamination in a SaaS context
-lcc scan . --project-license Apache-2.0 --context saas
+# 4. Scan against a built-in policy
+lcc policy list
+lcc scan . --policy permissive
+
+# 5. Write the EU AI Act Article 53 pack
+lcc compliance-pack .
 ```
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/aiexponent/.github/main/profile/assets/terminals/license-compliance-terminal.svg" alt="License Compliance Checker CLI Terminal Execution Preview — GPAI & Model License Scanning" width="100%"/>
-</p>
+Output of step 1 on a project with two pinned packages:
+
+```text
+                          License Compliance Findings
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Component           ┃ License    ┃ Confidence ┃ Project Root        ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━┩
+│ PASS   │ python:requests@2.… │ Apache-2.0 │       0.70 │ /path/to/project    │
+│ PASS   │ python:fastapi@0.1… │ MIT        │       0.70 │ /path/to/project    │
+└────────┴─────────────────────┴────────────┴────────────┴─────────────────────┘
+Licenses
+├── Apache-2.0 (1)
+│   └── python:requests@2.32.3
+└── MIT (1)
+    └── python:fastapi@0.111.0
+Scanned 2 components in 0.01s • No violations detected
+```
+
+LCC also prints a few `INFO` and `WARNING` log lines before the table. They are normal.
 
 ---
 
-## Why LCC
-
-| Evaluation Method | Cost | Turnaround | AI Model & Dataset Awareness | Offline / Zero-Telemetry? |
-| :--- | :--- | :--- | :--- | :--- |
-| **Big 4 IP Advisory** | €50K–€200K per audit¹ | 4–8 Weeks | ❌ No (Advisory opinion only) | ❌ No (NDAs & data sharing) |
-| **Legacy SCA Platforms** | $20K–$80K/year¹ | Days | ❌ No (Package-only manifests) | ❌ No (Transfers source/SBOM to cloud) |
-| **Manual Spreadsheet Audits** | "Free" | Weeks | ⚠️ Error-prone & incomplete | ⚠️ Manual |
-| **License Compliance Checker** | **Free (Apache 2.0)** | **< 60 seconds** | **✅ Yes (HuggingFace, GGUF, ONNX, RAIL)** | **✅ Yes (100% offline, zero network)** |
-
-<sup>¹ Indicative market figures gathered from public legal advisory retainers and enterprise SCA pricing pages. Not a formal benchmark; figures vary by code volume, model count, and jurisdiction.</sup>
-
----
-
-## System Architecture
-
-LCC operates as a deterministic, offline static-analysis and policy-enforcement pipeline:
+## How it works
 
 ```mermaid
-graph TB
-    subgraph Inputs ["1. Input Specifications"]
-        INP1["Polyglot Project Roots<br/><code>8+ Ecosystem Manifests</code>"]
-        INP2["AI Models & Binary Weights<br/><code>HuggingFace Hub · GGUF · ONNX</code>"]
-        INP3["Policy-as-Code Definitions<br/><code>OPA Rego · YAML Policies</code>"]
-    end
+graph LR
+    A["Project folder<br/><em>manifests, lock files, model files</em>"] --> B["Detectors<br/><em>find components</em>"]
+    B --> C["Resolvers<br/><em>look up each license</em>"]
+    C --> D["Policy check<br/><em>YAML policy, optional OPA server</em>"]
+    D --> E["Outputs<br/><em>table, JSON report, SBOM, reports, Article 53 pack</em>"]
 
-    subgraph Engines ["2. Resolution & Detection Engines"]
-        DEP["Multi-Ecosystem Resolver<br/><em>Python, JS/TS, Go, Java, Rust, Ruby, .NET, PHP</em>"]
-        MOD["AI Model License Analyzer<br/><em>RAIL, OpenRAIL, Llama, BigCode, Custom Terms</em>"]
-        DATA["Training Data Risk Registry<br/><em>Top 50+ datasets · Commercial-use filters</em>"]
-        AST["License Classifier & AST Parser<br/><em>SPDX matching · License header discovery</em>"]
-    end
-
-    subgraph Policy ["3. Policy Enforcement & Integrity"]
-        OPA["OPA Rego & YAML Policy Engine<br/><em>Deterministic rule evaluation</em>"]
-        ART53["Article 53 GPAI Validator<br/><em>Documentation & transparency gates</em>"]
-        GPL["Copyleft / SaaS Risk Gate<br/><em>Contamination & viral license isolation</em>"]
-    end
-
-    subgraph Outputs ["4. Audit-Ready Artifacts"]
-        OUT1["Rich Terminal UI<br/><em>Color-coded component & risk breakdown</em>"]
-        OUT2["CycloneDX 1.5 & SPDX 2.3 SBOM<br/><em>Standard supply chain bills of materials</em>"]
-        OUT3["Article 53 Compliance Pack<br/><em>eu_ai_act_report.json + Markdown summary</em>"]
-        OUT4["Attribution NOTICE Generator<br/><em>Legal distribution notices</em>"]
-        OUT5["Next.js Web Dashboard<br/><em>Local visual exploration UI</em>"]
-    end
-
-    INP1 & INP2 & INP3 --> DEP & MOD & DATA & AST
-    DEP & MOD & DATA & AST --> OPA & ART53 & GPL
-    OPA & ART53 & GPL --> OUT1 & OUT2 & OUT3 & OUT4 & OUT5
-
-    style Inputs fill:#F5F4EF,stroke:#E4E2DC,color:#0F1419
-    style Engines fill:#E6F4F1,stroke:#0D5463,color:#0D5463
-    style Policy fill:#FAF0E6,stroke:#B68A2E,color:#0F1419
-    style Outputs fill:#F5F4EF,stroke:#E4E2DC,color:#0F1419
+    style A fill:#F5F4EF,stroke:#E4E2DC,color:#0F1419
+    style B fill:#E6F4F1,stroke:#0D5463,color:#0D5463
+    style C fill:#E6F4F1,stroke:#0D5463,color:#0D5463
+    style D fill:#FAF0E6,stroke:#B68A2E,color:#0F1419
+    style E fill:#F5F4EF,stroke:#E4E2DC,color:#0F1419
 ```
 
----
-
-## What LCC Does
-
-- **Multi-Ecosystem SCA**: Scans dependencies across Python (`pip`, `poetry`), JavaScript/TypeScript (`npm`, `yarn`, `pnpm`), Go, Java (`Maven`, `Gradle`), Rust (`Cargo`), Ruby (`Bundler`), .NET (`NuGet`), and PHP (`Composer`).
-- **AI Model & Weight License Detection**: Resolves Hugging Face Hub model licenses, detects local binary weights (`.gguf`, `.onnx`), and flags restrictive license variants (RAIL, OpenRAIL, Llama Community License).
-- **EU AI Act Article 53 GPAI Assessment**: Evaluates general-purpose AI models against Article 53 statutory transparency, technical documentation, and training summary requirements.
-- **Training Data Risk Registry**: Pre-configured catalog of 50+ widely-used AI training datasets flagged for commercial-use limitations and attribution requirements.
-- **Dual SBOM Generation**: Produces industry-standard Software Bills of Materials in both CycloneDX v1.5 and SPDX v2.3 formats.
-- **Policy-as-Code Engine**: Write declarative compliance rules in YAML or expressive Open Policy Agent (OPA) Rego.
-- **Zero Network Calls (Offline Guarantee)**: Local filesystem and AST analysis with zero external telemetry and zero data leakage.
+1. **Detectors** read manifests and lock files and list the components.
+2. **Resolvers** look up each component's license. By default they ask public sources over the network: package registries, ClearlyDefined, GitHub and the Hugging Face Hub.
+3. **The policy check** marks each component as pass, warning or violation.
+4. **Outputs** are written from the same scan result.
 
 ---
 
-## Supported Export Formats
+## What LCC does
 
-LCC produces industry-standard Software Composition Analysis (SCA), SBOM, and regulatory compliance artifacts:
+- **Dependency license scan** for Python, JavaScript and TypeScript, Go, Java (Maven and Gradle), Rust, Ruby and .NET. See [Supported ecosystems](#supported-ecosystems).
+- **SBOM generation** in CycloneDX 1.5 and SPDX 2.3.
+- **Policy check** with seven built-in YAML policies, or your own policy file.
+- **AI model and dataset detection**: Hugging Face model references in code, local model files, and Hugging Face dataset references. Read the [known limitations](#known-limitations) before you rely on a model license result.
+- **EU AI Act Article 53 pack**: four files that record what LCC could and could not find for each AI model.
+- **Reports** in JSON, Markdown, HTML and CSV, plus an attribution file.
 
-| Format | Standard / Specification | Output File / Target | Primary Use Case |
-|---|---|---|---|
-| **CycloneDX** | CycloneDX v1.5 (JSON / XML) | `sbom.json` / `sbom.xml` | Enterprise Software Bill of Materials (SBOM) ingestion |
-| **SPDX** | SPDX v2.3 (JSON / Tag-Value) | `spdx.json` / `spdx.spdx` | Open-source supply chain verification & NTIA compliance |
-| **Article 53 Compliance Pack** | EU AI Act GPAI Spec (JSON / MD) | `eu_ai_act_report.json` | Regulatory filing & conformity evidence under Regulation (EU) 2024/1689 |
-| **JSON** | Native LCC Schema | `scan-report.json` | CI/CD automation, programmatic analysis, and dashboard ingestion |
-| **HTML** | Self-contained Report | `report.html` | Human-readable executive audits & sharing with stakeholders |
-| **Markdown** | Standard GFM | `report.md` | PR summaries, documentation, and repository tracking |
-| **CSV** | Tabular Spreadsheet | `report.csv` | Procurement, spreadsheet analysis, and legal inventory reviews |
-| **Attribution NOTICE** | Apache / Open-Source Standard | `NOTICE` | Distribution compliance and automated third-party license notices |
+---
+
+## Output formats
+
+| Output | Command | Formats |
+|---|---|---|
+| Scan result | `lcc scan` | Console table, JSON |
+| SBOM, CycloneDX 1.5 | `lcc sbom generate --format cyclonedx` | JSON, XML (`--sbom-format xml`) |
+| SBOM, SPDX 2.3 | `lcc sbom generate --format spdx` | JSON, tag-value (`--sbom-format tag-value`) |
+| Report | `lcc report generate` | JSON, Markdown, HTML, CSV |
+| Attribution file | `lcc report generate --format attribution` | Plain text |
+| Article 53 assessment | `lcc assess` | Console, JSON, HTML |
+| Article 53 pack | `lcc compliance-pack` | A folder with four files |
 
 > [!NOTE]
-> **SARIF Export Clarification**: LCC generates Software Composition Analysis (SCA) data, SBOMs, and regulatory compliance packs. It does **not** generate SARIF (Static Analysis Results Interchange Format) output, as SARIF is designed for static source code defect / flaw reporting. For SARIF-based EU AI Act compliance screening, see [LitmusAI](https://github.com/aiexponent/litmusai) (Article 5 Prohibited Practices Screener).
+> LCC does not write SARIF. For SARIF output on EU AI Act Article 5 screening, see [LitmusAI](https://github.com/aiexponent/litmusai).
 
 ---
 
-## Interactive Artifact Previews
+## Sample outputs
 
 <details>
-  <summary><b>📄 View Starter <code>lcc.yml</code> Policy Configuration</b></summary>
+  <summary><b>CycloneDX 1.5 SBOM (JSON)</b></summary>
 
-```yaml
-version: "1.0"
-project:
-  name: "ai-service-platform"
-  license: "Apache-2.0"
-  distribution: "saas"
-
-policies:
-  # Prohibit viral copyleft in commercial SaaS
-  prohibited_licenses:
-    - "GPL-2.0-only"
-    - "GPL-3.0-only"
-    - "AGPL-3.0-only"
-
-  # Allowed permissive licenses
-  allowed_licenses:
-    - "Apache-2.0"
-    - "MIT"
-    - "BSD-2-Clause"
-    - "BSD-3-Clause"
-    - "ISC"
-
-  # AI Model & Data Policy
-  ai_governance:
-    enforce_article_53: true
-    allow_non_commercial_models: false
-    flag_unresolved_weights: true
-```
-</details>
-
-<details>
-  <summary><b>🔍 View CycloneDX 1.5 SBOM Output (JSON)</b></summary>
+Real output of `lcc sbom generate` on the two-package project above. The `properties` block of each component and the `bom-ref` values are cut for length.
 
 ```json
 {
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.5",
-  "serialNumber": "urn:uuid:3e4567e8-9b12-4d34-a456-426614174000",
+  "serialNumber": "urn:uuid:81467af2-0c6f-4589-a5c1-38b5fd2781c8",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-09-22T12:00:00Z",
+    "timestamp": "2026-11-14T17:53:02.834497+00:00",
     "tools": [
       {
-        "vendor": "AiExponent LLC",
         "name": "license-compliance-checker",
-        "version": "2.0.1"
+        "vendor": "LCC Contributors",
+        "version": "2.0.2"
       }
-    ],
-    "component": {
-      "type": "application",
-      "name": "ai-service-platform",
-      "version": "1.0.0"
-    }
+    ]
   },
   "components": [
     {
@@ -230,26 +171,14 @@ policies:
       "name": "fastapi",
       "version": "0.111.0",
       "purl": "pkg:pypi/fastapi@0.111.0",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ]
+      "licenses": [{ "license": { "id": "MIT" } }]
     },
     {
-      "type": "machine-learning-model",
-      "name": "mistralai/Mistral-7B-Instruct-v0.3",
-      "version": "v0.3",
-      "purl": "pkg:huggingface/mistralai/Mistral-7B-Instruct-v0.3",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ]
+      "type": "library",
+      "name": "requests",
+      "version": "2.32.3",
+      "purl": "pkg:pypi/requests@2.32.3",
+      "licenses": [{ "license": { "id": "Apache-2.0" } }]
     }
   ]
 }
@@ -257,53 +186,50 @@ policies:
 </details>
 
 <details>
-  <summary><b>📊 View EU AI Act Article 53 Compliance Pack (JSON)</b></summary>
+  <summary><b>Built-in policy (start of <code>lcc policy show permissive</code>)</b></summary>
 
 ```json
 {
-  "statutory_reference": "Regulation (EU) 2024/1689, Article 53",
-  "compliance_target": "General-Purpose AI (GPAI) Model Documentation",
-  "generated_at": "2026-09-22T12:00:00Z",
-  "generator": "license-compliance-checker 2.0.1",
-  "verdict": "COMPLIANT",
-  "summary": {
-    "dependencies_scanned": 142,
-    "ai_models_detected": 2,
-    "datasets_audited": 3,
-    "policy_violations": 0
-  },
-  "article_53_checks": {
-    "technical_documentation_available": true,
-    "copyright_compliance_policy_documented": true,
-    "training_data_summary_provided": true,
-    "license_compatibility_verified": true
-  },
-  "ai_assets": [
-    {
-      "name": "mistralai/Mistral-7B-Instruct-v0.3",
-      "type": "model_weights",
-      "source": "Hugging Face Hub",
-      "license": "Apache-2.0",
-      "commercial_use_permitted": true
+  "name": "permissive",
+  "version": "1.0",
+  "description": "Permissive baseline policy that flags copyleft and non-OSI licenses for review.",
+  "default_context": "internal",
+  "contexts": {
+    "internal": {
+      "allow": ["MIT", "Apache-2.0", "BSD-*", "ISC", "CC0-1.0"],
+      "deny": ["SSPL-1.0"],
+      "review": ["GPL-*", "AGPL-*", "LGPL-*"]
     }
-  ]
+  }
 }
+```
+
+The full policy has more contexts and a reason for each rule.
+</details>
+
+<details>
+  <summary><b>Article 53 pack (folder contents)</b></summary>
+
+```text
+eu-ai-act-compliance-pack-<timestamp>/
+  copyright_policy_template.md
+  eu_ai_act_report.html
+  eu_ai_act_report.json
+  training_data_summary.json
 ```
 </details>
 
 ---
 
-## CI/CD Integration & Exit Codes
-
-Integrate LCC into your GitHub Actions workflow as an automated pull request compliance gate:
+## CI integration and exit codes
 
 ```yaml
-# .github/workflows/license-compliance.yml
-name: License & AI Compliance Gate
+# .github/workflows/license-check.yml
+name: License check
 on: [pull_request, push]
 
 jobs:
-  license-gate:
+  license-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -311,169 +237,136 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install license-compliance-checker
-      - name: Run LCC Scan
-        run: lcc scan . --policy .github/policies/corporate-policy.yml --format json --output compliance-report.json
-      - name: Generate CycloneDX SBOM
-        run: lcc sbom generate compliance-report.json --format cyclonedx --output sbom.json
+      - name: Scan
+        run: lcc scan . --policy permissive --format json --output scan-report.json
+      - name: Write CycloneDX SBOM
+        if: always()
+        run: lcc sbom generate scan-report.json --format cyclonedx --output sbom.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: compliance-artifacts
+          name: license-artifacts
           path: |
-            compliance-report.json
+            scan-report.json
             sbom.json
 ```
 
-### Exit Code Contract
+### Exit codes of `lcc scan`
 
-LCC implements deterministic UNIX exit codes for scripting, pre-commit hooks, and CI gates:
+| Exit code | Meaning |
+| :--- | :--- |
+| `0` | The scan finished and found no violations. |
+| `1` | The policy could not be loaded, for example a policy name or file that does not exist. |
+| `2` | The scan finished and found at least one violation. The report is still written. An invalid command-line option also exits with `2`. |
 
-| Exit Code | Meaning | CI Gate Behavior |
-| :--- | :--- | :--- |
-| `0` | **COMPLIANT** | All dependencies, AI models, and training datasets satisfy configured compliance policies. |
-| `1` | **POLICY VIOLATION** | Prohibited license detected (e.g. AGPL in SaaS context, non-commercial restrictions in production). |
-| `2` | **CONFIG / INPUT ERROR** | Malformed policy YAML/Rego file, missing target directory, or invalid CLI parameters. |
-| `3` | **REVIEW REQUIRED** | Compound license expressions (`AND`/`OR`) or ambiguous custom licenses requiring human review. |
+A violation is any of these: a policy rule marks a component as a violation, a license could not be resolved, or the confidence of a result is below `--threshold`.
 
----
+So `lcc scan . --policy eu-ai-act-compliance` exits with `2` and still prints a full report when the policy flags a component. That is the intended result, not an error.
 
-## CLI Command Reference
-
-| Command | Usage | Description |
-|---|---|---|
-| `lcc scan` | `lcc scan [PATH] [OPTIONS]` | Scan repository dependencies, AI models, and training data against policies. |
-| `lcc sbom generate` | `lcc sbom generate [INPUT] [OPTIONS]` | Generate CycloneDX v1.5 or SPDX v2.3 Software Bills of Materials. |
-| `lcc policy validate` | `lcc policy validate [POLICY_FILE]` | Validate custom YAML or OPA Rego policy files for syntax and completeness. |
-| `lcc report export` | `lcc report export [SCAN_REPORT] [OPTIONS]` | Export scan results into HTML, Markdown, CSV, or NOTICE attribution files. |
-| `lcc auth` | `lcc auth [login/logout/token]` | Manage API keys for registries, GitHub, and Hugging Face Hub access. |
-| `lcc server` | `lcc server --host [HOST] --port [PORT]` | Launch local FastAPI backend to power the Next.js compliance dashboard. |
-| `lcc --version` | `lcc --version` | Display the installed LCC version and environment info. |
+`lcc policy test <name> <report.json>` uses `2` for violations and `3` for warnings only.
 
 ---
 
-## AI Model & Dataset License Detection
+## CLI command reference
 
-LCC goes beyond standard package manifests (`package.json`, `requirements.txt`) to inspect the AI assets that actually govern your models:
-
-### HuggingFace Models
-
-LCC resolves HuggingFace models referenced in code or configuration by querying the HuggingFace Hub API. It detects:
-
-- Open-source permissive licenses: Apache-2.0, MIT, BSD
-- Restrictive/responsible AI licenses: RAIL, OpenRAIL, BigCode OpenRAIL-M
-- Proprietary/commercial terms: Llama 2/3 Community License, Mistral Research License
-- Non-commercial restrictions: CC-BY-NC-4.0
-
-```bash
-# Scan a repo that uses HuggingFace models
-lcc scan . --scan-models
-
-# Scan a specific HuggingFace model directly
-lcc scan-model meta-llama/Llama-3-8B-Instruct
-```
-
-### Local Model Files
-
-LCC identifies model weights stored locally in your repository:
-
-- GGUF files (`.gguf`) — extracts embedded metadata including license strings
-- ONNX models (`.onnx`) — parses graph metadata for model provenance
-- PyTorch/Safetensors (`.bin`, `.safetensors`) — pairs with companion `config.json`
-
----
-
-## EU AI Act Article 53 Compliance
-
-Under Article 53 of the EU AI Act (Regulation (EU) 2024/1689), providers of general-purpose AI (GPAI) models must:
-
-1. Put in place a policy to comply with Union copyright law
-2. Draw up and make publicly available a sufficiently detailed summary about the content used for training
-
-LCC assesses your repository against these requirements and generates a compliance pack:
-
-```bash
-lcc scan . --policy eu-ai-act-compliance --format json --output eu-compliance.json
-```
-
-The output includes:
-
-- Verification of copyright compliance policies in your repo
-- Model training data provenance assessment
-- Flagged training datasets with known copyright or licensing risks
-- Ready-to-file documentation for downstream deployers and regulators
-
----
-
-## Training Data Risk Registry
-
-LCC includes a curated registry of commonly used AI training datasets and their commercial use status:
-
-| Dataset | Primary License | Commercial Use | Risk Level |
-|---|---|---|---|
-| Common Crawl | Terms of Use / Mixed | Requires review | Medium |
-| LAION-5B | CC-BY-4.0 (metadata only) | Permitted with attribution | Medium |
-| ImageNet | Non-commercial research only | Prohibited | High |
-| Books3 / The Pile | Copyrighted content / Takendown | Prohibited | Critical |
-| RedPajama | Mixed (per-source) | Permitted for vetted subsets | Low-Medium |
-| Dolma | OpenRAIL / Mixed | Permitted with restrictions | Low |
-
----
-
-## Policy-as-Code with OPA Rego
-
-Define your organization's license policies using Open Policy Agent (OPA) Rego or simple YAML rules:
-
-```rego
-package lcc.policy
-
-default allow = false
-
-# Allow permissive licenses
-allow {
-    input.license.type == "permissive"
-}
-
-# Block copyleft in proprietary projects
-deny[msg] {
-    input.project.type == "proprietary"
-    input.license.copyleft == true
-    msg := sprintf("Copyleft license %v is prohibited in proprietary projects", [input.license.spdx_id])
-}
-
-# Require attribution for AI models
-warn[msg] {
-    input.component.type == "ai-model"
-    not input.component.has_attribution
-    msg := sprintf("AI model %v missing required attribution", [input.component.name])
-}
-```
-
-```bash
-# Run with a custom policy
-lcc scan . --rego-policy ./policies/corporate.rego
-```
-
----
-
-## Monorepo & Multi-Language Support
-
-LCC automatically discovers and parses manifests across polyglot repositories:
-
-| Language/Ecosystem | Files Detected |
+| Command | What it does |
 |---|---|
-| Python | `pyproject.toml`, `setup.py`, `requirements.txt`, `Pipfile`, `poetry.lock` |
-| JavaScript/TypeScript | `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml` |
+| `lcc scan [PATH]` | Scan a project folder. Options include `--format`, `--output`, `--policy`, `--context`, `--recursive`, `--exclude`, `--offline`, `--include-transitive`. |
+| `lcc sbom generate REPORT --output FILE` | Write a CycloneDX or SPDX SBOM from a JSON scan report. |
+| `lcc sbom validate FILE` | Check the structure of an SBOM file. |
+| `lcc report generate PATH` | Write a JSON, Markdown, HTML, CSV or attribution report. |
+| `lcc policy list` | List the available policies. |
+| `lcc policy show NAME` | Print a policy. |
+| `lcc policy export NAME FILE` | Copy a policy to a file you can edit. |
+| `lcc policy validate FILE` | Check a policy file. |
+| `lcc policy test NAME REPORT` | Evaluate a policy against a JSON scan report. |
+| `lcc assess PATH` | Run the Article 53 assessment on a project or a JSON report. |
+| `lcc compliance-pack PATH` | Write the Article 53 pack. |
+| `lcc server` | Run the REST API (default `127.0.0.1:8000`). |
+| `lcc --version` | Print the installed version. |
+
+Run `lcc <command> --help` for every option.
+
+---
+
+## Policies
+
+LCC ships seven policies: `permissive`, `copyleft-friendly`, `ai-ml-permissive`, `ai-ml-research`, `ai-ml-strict`, `eu-ai-act-compliance` and `nist-ai-rmf`.
+
+```bash
+# Use a built-in policy
+lcc scan . --policy permissive
+
+# Start your own policy from a built-in one
+lcc policy export permissive ./my-policy.yml
+lcc policy validate ./my-policy.yml
+lcc scan . --policy ./my-policy.yml
+
+# Pick the usage context the policy should apply
+lcc scan . --policy permissive --context saas
+```
+
+LCC can also ask an [Open Policy Agent](https://www.openpolicyagent.org/) server for the decision. Set `LCC_OPA_URL` to the server address. A sample Rego policy is in [`policy/rego/license_policy.rego`](policy/rego/license_policy.rego). See the [Policy Guide](https://aiexponent.github.io/license-compliance-checker/guides/policies/).
+
+---
+
+## AI models and datasets
+
+A plain `lcc scan .` also looks for AI components. There is no separate flag or command for it.
+
+- **Hugging Face model references** in code, such as `from_pretrained("org/model")`. LCC asks the Hugging Face Hub for the model's license.
+- **Local model folders and files**: Hugging Face model folders, and `.gguf` and `.onnx` files.
+- **Hugging Face dataset references**, matched against a built-in list of dataset licenses.
+
+Model components appear in the scan table, the JSON report and the SBOM (CycloneDX type `machine-learning-model`).
+
+> [!WARNING]
+> In 2.0.2, when the Hugging Face lookup fails, LCC can still show a license and a `PASS` status for the model. This happens with gated models, which return `401 Unauthorized`. The license shown is then not reliable. If you see `HF Hub API fetch failed` in the log, check the model card yourself.
+
+---
+
+## EU AI Act Article 53 pack
+
+```bash
+# Assessment only
+lcc assess . --format html --output eu-ai-act.html
+
+# Full pack: a timestamped folder with four files
+lcc compliance-pack .
+```
+
+For each AI model found in the scan, the assessment lists the Article 53 obligations it checks, with a status (`met`, `partial`, `not_met` or `not_applicable`), the evidence found and the gaps.
+
+What the pack is:
+
+- A record of what LCC could find in your repository and in the model's public metadata.
+- A copyright policy template and a training data summary file for you to complete.
+
+What the pack is not:
+
+- It is not a legal determination, and a `met` status does not mean you meet Article 53.
+- Article 53 applies to providers of general-purpose AI models. If you only use a model, your obligations are different.
+
+---
+
+## Supported ecosystems
+
+| Ecosystem | Files detected |
+|---|---|
+| Python | `requirements.txt`, `pyproject.toml`, `setup.py`, `Pipfile`, `poetry.lock`, `environment.yml`. Files named `requirements-*.txt` are read only when one of these is also present. |
+| JavaScript and TypeScript | `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml` |
 | Go | `go.mod`, `go.sum` |
-| Java/Kotlin | `pom.xml`, `build.gradle`, `build.gradle.kts` |
+| Java (Maven) | `pom.xml` |
+| Java and Kotlin (Gradle) | `build.gradle`, `build.gradle.kts` |
 | Rust | `Cargo.toml`, `Cargo.lock` |
 | Ruby | `Gemfile`, `Gemfile.lock` |
-| .NET | `*.csproj`, `packages.config` |
-| PHP | `composer.json`, `composer.lock` |
+| .NET | `*.csproj`, `*.fsproj`, `*.vbproj`, `packages.config` |
 
 ---
 
 ## Web Dashboard
 
-For teams that prefer a visual interface, LCC includes a local Next.js web dashboard:
+LCC includes a Next.js dashboard that runs locally with Docker:
 
 ```bash
 git clone https://github.com/aiexponent/license-compliance-checker
@@ -481,17 +374,18 @@ cd license-compliance-checker
 docker-compose up -d
 ```
 
-Open `http://localhost:3000` to explore scan results, dependency trees, and policy violations.
+Open `http://localhost:3000` to explore scan results. See the [Deployment and Dashboard Guide](https://aiexponent.github.io/license-compliance-checker/deployment/).
 
 ---
 
 ## Known Limitations
 
-- HuggingFace Hub API scanning requires referenced model IDs (not local downloads only).
-- SPDX `AND`/`OR` compound expressions are flagged for manual review, not auto-resolved.
-- Transitive dependency resolution requires a lock file (`poetry.lock`, `package-lock.json`).
-- Article 53 assessment covers documentation completeness only — not a legal compliance determination.
-- Training data risk registry covers top-50 known datasets; unknown datasets flagged for review.
+- **Gated Hugging Face models.** When the Hub lookup fails, the license shown for the model is not reliable. See the warning under [AI models and datasets](#ai-models-and-datasets).
+- **Network use.** A scan looks up licenses online. With `--offline`, LCC skips the license lookup calls, and a license it cannot find locally is shown as `UNRESOLVED`, which counts as a violation. `--offline` does not turn off the policy server: if `LCC_OPA_URL` is set, the policy check still sends component names, licenses and confidence scores to that server.
+- **Missing folder.** `lcc scan` on a path that does not exist reports zero components and exits with `0`.
+- **Transitive dependencies** need `--include-transitive` and a lock file (`poetry.lock` or `package-lock.json`).
+- **Confidence.** Each result has a confidence score. Treat a low score as a prompt to check the license yourself.
+- **Article 53.** The assessment checks documentation that LCC can find. It is not a legal determination.
 
 ---
 
@@ -499,14 +393,14 @@ Open `http://localhost:3000` to explore scan results, dependency trees, and poli
 
 Full documentation is available on the live [Material for MkDocs Documentation Portal](https://aiexponent.github.io/license-compliance-checker/):
 
-- **[Getting Started & Quick Start](https://aiexponent.github.io/license-compliance-checker/getting-started/quickstart/)** — Setup guide, first project scan, and SBOM generation.
-- **[Installation Guide](https://aiexponent.github.io/license-compliance-checker/getting-started/installation/)** — Package managers (`pip`, `uv`), container installation, and requirements.
-- **[User Guide & CLI Manual](https://aiexponent.github.io/license-compliance-checker/guides/user/)** — Comprehensive command-line flags, scanners, and report generators.
-- **[Policy Guide (Rego & YAML)](https://aiexponent.github.io/license-compliance-checker/guides/policies/)** — Authoring custom policies, OPA rules, and compliance gates.
-- **[API Reference & Schemas](https://aiexponent.github.io/license-compliance-checker/reference/api/)** — Python SDK, FastAPI endpoints, and schema definitions.
-- **[Deployment & Dashboard Guide](https://aiexponent.github.io/license-compliance-checker/deployment/)** — Production checklists, Docker deployment, and web dashboard access.
-- **[Troubleshooting & FAQ](https://aiexponent.github.io/license-compliance-checker/reference/faq/)** — Common questions, licensing nuances, and SARIF non-support rationale.
-- **[Testing Guide](https://aiexponent.github.io/license-compliance-checker/guides/testing/)** — Running the automated test suite and integration test environments.
+- **[Getting Started & Quick Start](https://aiexponent.github.io/license-compliance-checker/getting-started/quickstart/)**: Setup guide, first project scan, and SBOM generation.
+- **[Installation Guide](https://aiexponent.github.io/license-compliance-checker/getting-started/installation/)**: Package managers (`pip`, `uv`), container installation, and requirements.
+- **[User Guide & CLI Manual](https://aiexponent.github.io/license-compliance-checker/guides/user/)**: Comprehensive command-line flags, scanners, and report generators.
+- **[Policy Guide (Rego & YAML)](https://aiexponent.github.io/license-compliance-checker/guides/policies/)**: Authoring custom policies, OPA rules, and compliance gates.
+- **[API Reference & Schemas](https://aiexponent.github.io/license-compliance-checker/reference/api/)**: Python SDK, FastAPI endpoints, and schema definitions.
+- **[Deployment & Dashboard Guide](https://aiexponent.github.io/license-compliance-checker/deployment/)**: Deployment checklists, Docker deployment, and web dashboard access.
+- **[Troubleshooting & FAQ](https://aiexponent.github.io/license-compliance-checker/reference/faq/)**: Common questions, licensing nuances, and SARIF non-support rationale.
+- **[Testing Guide](https://aiexponent.github.io/license-compliance-checker/guides/testing/)**: Running the automated test suite and integration test environments.
 
 ---
 
@@ -534,19 +428,25 @@ pytest
 
 ---
 
-## Privacy & Zero-Telemetry Guarantee
+## Privacy
 
 <a name="privacy"></a>
 
-License Compliance Checker operates completely locally and offline with **zero telemetry**, no usage tracking, and no external reporting. Your dependency graphs, policies, proprietary codebases, and compliance packs remain strictly on your local infrastructure.
+LCC has no telemetry and no usage tracking. With the default settings, your source code, reports and SBOMs stay on your machine.
+
+A scan does send some data out:
+
+- **License lookups (on by default).** Package names and versions, and Hugging Face model names, go to public sources: package registries, ClearlyDefined, GitHub and the Hugging Face Hub. Use `--offline` to skip these calls.
+- **Policy server (only if you set `LCC_OPA_URL`).** Component names, licenses and confidence scores go to the OPA server you configured. `--offline` does not turn this off.
+- **LLM analysis (off by default).** If you install the `ai` extra and set `LCC_LLM_PROVIDER`, LCC sends text from your files, up to 2,000 characters per request, to that provider. This is file content, not only package names.
 
 ---
 
 ## License
 
-[Apache 2.0](LICENSE) — free to use, modify, and distribute.
+[Apache 2.0](LICENSE). Free to use, modify, and distribute.
 
-Built by [AI Exponent LLC](https://aiexponent.com) — `hello@aiexponent.com`
+Built by [AI Exponent LLC](https://aiexponent.com). Contact: `hello@aiexponent.com`
 
 ---
 
