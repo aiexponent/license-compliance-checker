@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "license-compliance-checker"
-version = "2.0.2"
+version = "2.0.3"
 description = "License Compliance Checker (LCC): scans dependency licenses, checks them against a policy, and writes CycloneDX and SPDX SBOMs."
 authors = [
   { name = "Ajay Pundhir" }

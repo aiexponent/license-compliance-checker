@@ -7,9 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- A model referenced by its Hugging Face ID no longer takes the license of the project being scanned. When the Hub lookup failed (for example `401 Unauthorized` on a gated model), ran in `--offline` mode, or returned no usable license, LCC read the project's own `LICENSE` file and showed that license with `PASS` for the model. Such a model is now reported as `Unknown` and `UNRESOLVED`.
-
 ### Planned
 - SBOM API endpoints (currently CLI-only due to library migration)
 - Policy write operations via API (POST, PUT, DELETE endpoints)
@@ -17,6 +14,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Slack/Teams integration for alerts
 - Support for additional languages (PHP, Swift, Kotlin)
 - Advanced SBOM features (vulnerability integration)
+
+---
+
+## [2.0.3] - 2026-11-15
+
+### Fixed
+- A model referenced by its Hugging Face ID no longer takes the license of the project being scanned. When the Hub lookup failed (for example `401 Unauthorized` on a gated model), ran in `--offline` mode, or returned no usable license, LCC read the project's own `LICENSE` file and showed that license with `PASS` for the model. Such a model is now reported as `Unknown` and `UNRESOLVED`.
+
+### Changed
+- A scan that contains such a model now exits with `2`, because an unresolved license counts as a violation.
+- The PyPI summary now reads "License Compliance Checker (LCC): scans dependency licenses, checks them against a policy, and writes CycloneDX and SPDX SBOMs."
+- Minimum versions raised: `gitpython` 3.2.1, `python-jose` 3.5.0, `fakeredis` 2.40.0 and `starlette` 1.10.0.
+
+### Documentation
+- The README was rewritten from tested output. Commands and options that do not exist were removed, and the exit code table was corrected.
 
 ---
 
