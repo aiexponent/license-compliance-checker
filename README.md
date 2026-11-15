@@ -321,7 +321,7 @@ A plain `lcc scan .` also looks for AI components. There is no separate flag or 
 Model components appear in the scan table, the JSON report and the SBOM (CycloneDX type `machine-learning-model`).
 
 > [!WARNING]
-> In 2.0.2, when the Hugging Face lookup fails, LCC can still show a license and a `PASS` status for the model. This happens with gated models, which return `401 Unauthorized`. The license shown is then not reliable. If you see `HF Hub API fetch failed` in the log, check the model card yourself.
+> In 2.0.2, when the Hugging Face lookup fails, LCC can still show a license and a `PASS` status for the model. This happens with gated models, which return `401 Unauthorized`. The license shown is then not reliable. If you see `HF Hub API fetch failed` in the log, check the model card yourself. This is fixed on `main` (the model is reported as `Unknown`) and will be in the next release.
 
 ---
 

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- A model referenced by its Hugging Face ID no longer takes the license of the project being scanned. When the Hub lookup failed (for example `401 Unauthorized` on a gated model), ran in `--offline` mode, or returned no usable license, LCC read the project's own `LICENSE` file and showed that license with `PASS` for the model. Such a model is now reported as `Unknown` and `UNRESOLVED`.
+
 ### Planned
 - SBOM API endpoints (currently CLI-only due to library migration)
 - Policy write operations via API (POST, PUT, DELETE endpoints)
