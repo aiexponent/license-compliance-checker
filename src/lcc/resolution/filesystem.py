@@ -71,6 +71,13 @@ class FileSystemResolver(Resolver):
         self.config = config
 
     def resolve(self, component: Component) -> Iterable[LicenseEvidence]:
+        # A model referenced by Hub ID has no local files. The license files
+        # under its path belong to the project being scanned, so reading them
+        # would give the model the project's license (for example a gated
+        # model whose Hub lookup returned 401 showing as MIT).
+        if component.metadata.get("source") == "hub_api":
+            return []
+
         root = self._resolve_root(component)
         if root is None or not root.exists():
             return []
