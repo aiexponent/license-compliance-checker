@@ -23,7 +23,7 @@
 >
 > LCC is an engineering tool. It is **not** legal advice and it does not decide whether you meet any law. Its output is evidence for your own review.
 
-Every command on this page was run on version 2.0.2 with Python 3.11.
+Every command on this page was run on version 2.0.3 with Python 3.11.
 
 ---
 
@@ -161,7 +161,7 @@ Real output of `lcc sbom generate` on the two-package project above. The `proper
       {
         "name": "license-compliance-checker",
         "vendor": "LCC Contributors",
-        "version": "2.0.2"
+        "version": "2.0.3"
       }
     ]
   },
@@ -320,8 +320,8 @@ A plain `lcc scan .` also looks for AI components. There is no separate flag or 
 
 Model components appear in the scan table, the JSON report and the SBOM (CycloneDX type `machine-learning-model`).
 
-> [!WARNING]
-> In 2.0.2, when the Hugging Face lookup fails, LCC can still show a license and a `PASS` status for the model. This happens with gated models, which return `401 Unauthorized`. The license shown is then not reliable. If you see `HF Hub API fetch failed` in the log, check the model card yourself. This is fixed on `main` (the model is reported as `Unknown`) and will be in the next release.
+> [!NOTE]
+> When the Hugging Face lookup gives no license, the model is shown as `Unknown` with status `UNRESOLVED`, and the scan exits with `2`. This happens with gated models, which return `401 Unauthorized`, and in `--offline` mode. Check the model card yourself. Versions up to 2.0.2 could instead show the scanned project's own license with `PASS` for such a model; upgrade to 2.0.3.
 
 ---
 
@@ -408,7 +408,8 @@ Full documentation is available on the live [Material for MkDocs Documentation P
 
 | Version | Highlights |
 |---|---|
-| **[v2.0.2](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.2)** | Fixes `lcc sbom generate` on the report written by `lcc scan --format json` (2.0.1 produced an SBOM with no components), records the real LCC version in SBOMs, and honours `--project-name` and `--project-version`. |
+| **[v2.0.3](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.3)** | Fixes the license shown for a model referenced by its Hugging Face ID: it no longer takes the scanned project's license when the Hub lookup gives none (for example a gated model). |
+| [v2.0.2](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.2) | Fixes `lcc sbom generate` on the report written by `lcc scan --format json` (2.0.1 produced an SBOM with no components), records the real LCC version in SBOMs, and honours `--project-name` and `--project-version`. |
 | [v2.0.1](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.1) | Hard-gated type checking in CI (0 errors across 99 files), Python 3.13 matrix, live Material for MkDocs portal, 8-format Supported Export Formats, reciprocal 5-tool ecosystem footer, flat-square badges & Dependabot. |
 | [v2.0.0](https://github.com/aiexponent/license-compliance-checker/releases/tag/v2.0.0) | Major release: OPA Rego policy engine, EU AI Act Article 53 compliance packs, CycloneDX 1.5 & SPDX 2.3 SBOM generation, AI model & GGUF/ONNX detection. |
 | [v1.0.0](https://github.com/aiexponent/license-compliance-checker/releases/tag/v1.0.0) | Initial release of multi-ecosystem dependency license scanner. |
@@ -422,7 +423,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Issues and PRs welcome.
 ```bash
 git clone https://github.com/aiexponent/license-compliance-checker
 cd license-compliance-checker
-pip install -e ".[dev]"
+pip install -e ".[all,test]"
 pytest
 ```
 
