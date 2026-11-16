@@ -380,7 +380,7 @@ Open `http://localhost:3000` to explore scan results. See the [Deployment and Da
 
 ## Known Limitations
 
-- **Gated Hugging Face models.** When the Hub lookup fails, the license shown for the model is not reliable. See the warning under [AI models and datasets](#ai-models-and-datasets).
+- **Gated Hugging Face models.** When the Hub lookup gives no license, the model is shown as `Unknown` with status `UNRESOLVED`, and you need to check the model card yourself. See the note under [AI models and datasets](#ai-models-and-datasets).
 - **Network use.** A scan looks up licenses online. With `--offline`, LCC skips the license lookup calls, and a license it cannot find locally is shown as `UNRESOLVED`, which counts as a violation. `--offline` does not turn off the policy server: if `LCC_OPA_URL` is set, the policy check still sends component names, licenses and confidence scores to that server.
 - **Missing folder.** `lcc scan` on a path that does not exist reports zero components and exits with `0`.
 - **Transitive dependencies** need `--include-transitive` and a lock file (`poetry.lock` or `package-lock.json`).
